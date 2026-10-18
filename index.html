@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a7bd6">
+<title>Games for Teddy & Tommy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #ffd400;
+    --pink: #ff3d7f;
+    --cyan: #18d4ff;
+    --mint: #c3d6cf;
+    --ink: #14121f;
+    --display: 'Bungee', 'Arial Black', Impact, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh; color: #fff; font-family: 'Rubik', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(180deg, #2a7bd6 0%, #5aa8ec 45%, #8fd0ff 100%) fixed;
+    padding: max(20px, env(safe-area-inset-top)) 16px 40px;
+  }
+  header { text-align: center; margin: 12px auto 28px; max-width: 900px; }
+  h1 {
+    font-family: var(--display); font-weight: 400; line-height: 0.95; font-size: clamp(40px, 9vw, 84px);
+    color: var(--yellow); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill;
+    text-shadow: 0 6px 0 var(--pink), 0 10px 0 var(--ink), 0 16px 26px rgba(0, 0, 0, 0.3);
+    transform: rotate(-3deg);
+  }
+  h1 span { display: block; color: var(--cyan); text-shadow: 0 6px 0 var(--yellow), 0 10px 0 var(--ink), 0 16px 26px rgba(0, 0, 0, 0.3); }
+  .tag { margin-top: 22px; font-size: clamp(15px, 2.4vw, 19px); font-weight: 700; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); }
+  h2 {
+    max-width: 1100px; margin: 34px auto 14px; font-family: var(--display); font-weight: 400; font-size: 22px;
+    letter-spacing: 1px; text-shadow: 0 3px 0 var(--ink);
+  }
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .card {
+    position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 22px;
+    background: rgba(20, 18, 31, 0.62); border: 3px solid #fff; color: #fff; text-decoration: none;
+    box-shadow: 0 8px 0 var(--ink), 0 16px 30px rgba(0, 0, 0, 0.25); transition: transform 0.12s;
+  }
+  .live .card:hover { transform: translateY(-4px) rotate(-0.6deg); }
+  .live .card:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--ink); }
+  .icon { font-size: 56px; line-height: 1; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35)); }
+  .card h3 { font-family: 'Rubik', system-ui, sans-serif; font-weight: 800; font-size: 24px; color: var(--yellow); text-shadow: 0 2px 0 var(--ink); } /* keeps FlaTTy / FruiTTy capitals (Bungee is all caps) */
+  .card p { font-size: 15px; line-height: 1.4; opacity: 0.95; flex: 1; }
+  .play {
+    align-self: flex-start; font-family: var(--display); font-size: 18px; color: var(--ink); background: var(--yellow);
+    border: 3px solid var(--ink); border-radius: 14px; padding: 8px 18px; box-shadow: 0 5px 0 var(--ink); text-decoration: none;
+  }
+  .play::after { content: ""; position: absolute; inset: 0; border-radius: 22px; } /* the whole card opens the game */
+  .code { position: absolute; z-index: 1; top: 14px; right: 16px; font-size: 13px; font-weight: 700; color: var(--cyan); }
+  .soon .card { background: rgba(20, 18, 31, 0.35); border-style: dashed; box-shadow: none; }
+  .soon .card h3 { color: #fff; font-size: 19px; }
+  .soon .badge { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--ink); background: var(--mint); border-radius: 999px; padding: 4px 10px; }
+  .soon .icon { font-size: 40px; }
+  footer { max-width: 1100px; margin: 40px auto 0; text-align: center; font-weight: 700; opacity: 0.9; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+  footer a { color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Games for <span>Teddy & Tommy</span></h1>
+  <p class="tag">Starring the brothers: Teddy with his boxing and jump shot, Tommy with his ✌️ Y pose. In every game you can call the other brother to come help.</p>
+</header>
+
+<h2>▶ PLAY NOW</h2>
+<main class="grid live" id="live"></main>
+
+<h2>🛠 COMING SOON</h2>
+<section class="grid soon" id="soon"></section>
+
+<footer>Made by Dad with <a href="https://claude.com/claude-code">Claude Code</a> · every game works on phones, tablets and computers</footer>
+
+<script>
+  // The games. Move a game from SOON to LIVE (with its repo name) once it's published on GitHub Pages.
+  const LIVE = [
+    { repo: 'metro-surfer', icon: '🚇', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.' },
+    { repo: 'flatty-birds', icon: '🐦', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Your brother flies along beside you.' },
+    { repo: 'fruitty-kids', icon: '🍉', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.' },
+    { repo: 'king-of-bonk', icon: '🥊', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 player or 2.' },
+    { repo: 'magic-8-teddy', icon: '🎱', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.' },
+  ];
+  const SOON = [
+    { icon: '💥', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at zombie towers.' },
+    { icon: '🏢', name: '100 Floors', text: '是男人就下一百层, and 上一百层 too.' },
+    { icon: '🎾', name: 'Tennis', text: 'Teddy vs Tommy on the court.' },
+    { icon: '🏐', name: 'Volleyball', text: 'Jump, spike, dive: brother vs brother.' },
+    { icon: '🚦', name: 'Crossy Hop', text: 'Hop across roads, rivers and subway tracks.' },
+    { icon: '🧩', name: 'Brothers Co-op', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy.' },
+    { icon: '💣', name: 'Bomber Bros', text: 'Maze bombs, power-ups, and a Teddy vs Tommy battle.' },
+    { icon: '🏀', name: 'Hoops Shootout', text: 'Arcade basketball shooting with Teddy\'s jump shot.' },
+    { icon: '⛹️', name: 'Street Hoops', text: '2-on-2 street basketball: Team Teddy & Tommy.' },
+    { icon: '🍒', name: 'Fruit Merge', text: '合成大西瓜: merge your way up to a watermelon.' },
+    { icon: '🧸', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.' },
+  ];
+
+  const live = document.getElementById('live');
+  for (const g of LIVE) {
+    const d = document.createElement('article');
+    d.className = 'card';
+    d.innerHTML = `<span class="icon">${g.icon}</span><h3>${g.name}</h3><p>${g.text}</p>` +
+      `<a class="play" href="https://adong.github.io/${g.repo}/">▶ PLAY</a>` +
+      `<a class="code" href="https://github.com/adong/${g.repo}">code ↗</a>`;
+    live.appendChild(d);
+  }
+  const soon = document.getElementById('soon');
+  for (const g of SOON) {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.innerHTML = `<span class="icon">${g.icon}</span><h3>${g.name}</h3><p>${g.text}</p><span class="badge">BEING BUILT</span>`;
+    soon.appendChild(d);
+  }
+</script>
+</body>
+</html>
