@@ -32,6 +32,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/brawler-tt.jpg" width="200" alt="Double TTrouble">](https://adong.github.io/brawler-tt/) | 🛏️ **Double TTrouble**: 双截龙 pillow-fight brawler | [play](https://adong.github.io/brawler-tt/) | [adong/brawler-tt](https://github.com/adong/brawler-tt) |
 | [<img src="shots/snowball-fight-tt.jpg" width="200" alt="SnowbaTTle">](https://adong.github.io/snowball-fight-tt/) | ❄️ **SnowbaTTle**: 打雪仗 snowball fight | [play](https://adong.github.io/snowball-fight-tt/) | [adong/snowball-fight-tt](https://github.com/adong/snowball-fight-tt) |
 | [<img src="shots/tt-table-tennis.jpg" width="200" alt="TT Table Tennis">](https://adong.github.io/tt-table-tennis/) | 🏓 **TT Table Tennis**: 乒乓球 | [play](https://adong.github.io/tt-table-tennis/) | [adong/tt-table-tennis](https://github.com/adong/tt-table-tennis) |
+| [<img src="shots/sky-tt.jpg" width="200" alt="Sky TT">](https://adong.github.io/sky-tt/) | ✈️ **Sky TT**: classic plane shooter, 1 or 2 players | [play](https://adong.github.io/sky-tt/) | [adong/sky-tt](https://github.com/adong/sky-tt) |
 
 ## How they're made
 
