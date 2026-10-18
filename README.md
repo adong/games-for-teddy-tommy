@@ -2,7 +2,7 @@
 
 **▶ Dashboard: https://adong.github.io/games-for-teddy-tommy/**
 
-Browser games starring two brothers: Teddy, with his boxing combos and basketball jump shot, and Tommy, with his ✌️ Y pose. Every game has a companion mode where you call the other brother in to help. They all play on phones, tablets and computers, with nothing to install.
+Browser games starring two brothers: Teddy, with his boxing combos and basketball jump shot, and Tommy, with his ✌️ Y pose. Every game has a companion mode where you call the other brother in to help. They all play on phones, tablets and computers, with nothing to install. In any game, press **?** (or tap the round **?** button on the left edge) to see its keys; the game waits while you look.
 
 ## Play now
 
