@@ -16,7 +16,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 
 ## Coming soon
 
-Angry TNT 💥 · 100 Floors (是男人就下/上一百层) 🏢 · Tennis 🎾 · Volleyball 🏐 · Crossy Hop 🚦 · Brothers Co-op 🧩 · Bomber Bros 💣 · Hoops Shootout 🏀 · Street Hoops ⛹️ · Fruit Merge (合成大西瓜) 🍒 · Tommy's Toy Box 🧸
+TNT Brothers (10 levels) 🍄 · Angry TNT 💥 · 100 Floors (是男人就下/上一百层) 🏢 · Tennis 🎾 · Volleyball 🏐 · Crossy Hop 🚦 · Brothers Co-op 🧩 · Bomber Bros 💣 · Hoops Shootout 🏀 · Street Hoops ⛹️ · Fruit Merge (合成大西瓜) 🍒 · Tommy's Toy Box 🧸
 
 ## How they're made
 
