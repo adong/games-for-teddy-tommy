@@ -30,7 +30,8 @@
     text-shadow: 0 6px 0 var(--pink), 0 10px 0 var(--ink), 0 16px 26px rgba(0, 0, 0, 0.3);
     transform: rotate(-3deg);
   }
-  h1 span { display: block; color: var(--cyan); text-shadow: 0 6px 0 var(--yellow), 0 10px 0 var(--ink), 0 16px 26px rgba(0, 0, 0, 0.3); }
+  h1 span { display: block; }
+  h1 .b { color: var(--cyan); text-shadow: 0 6px 0 var(--yellow), 0 10px 0 var(--ink), 0 16px 26px rgba(0, 0, 0, 0.3); }
   .tag { margin-top: 22px; font-size: clamp(15px, 2.4vw, 19px); font-weight: 700; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); }
   h2 {
     max-width: 1100px; margin: 34px auto 14px; font-family: var(--display); font-weight: 400; font-size: 22px;
@@ -66,72 +67,121 @@
   .soon .icon { font-size: 40px; }
   footer { max-width: 1100px; margin: 40px auto 0; text-align: center; font-weight: 700; opacity: 0.9; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
   footer a { color: #fff; }
+  .lang { /* Lucide's languages icon: tap to switch English / 中文 */
+    position: fixed; z-index: 5; top: max(12px, env(safe-area-inset-top)); right: 18px; width: 48px; height: 48px; padding: 0;
+    display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 3px solid #fff;
+    background: rgba(20, 18, 31, 0.62); color: #fff; cursor: pointer; box-shadow: 0 4px 0 var(--ink);
+  }
+  .lang:hover { background: var(--yellow); color: var(--ink); border-color: var(--ink); }
 </style>
 </head>
 <body>
+<!-- Icon: Lucide "languages" (lucide-static 0.460.0), ISC License, Copyright (c) Lucide Contributors 2022 -->
+<button type="button" class="lang" id="langBtn" aria-label="English / 中文" title="中文"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg></button>
 <header>
-  <h1>Games for <span>Teddy & Tommy</span></h1>
-  <p class="tag">Starring the brothers: Teddy with his boxing and jump shot, Tommy with his ✌️ Y pose. In every game you can call the other brother to come help, and <b>?</b> shows the keys.</p>
+  <h1><span class="a" id="h1a">Games for</span> <span class="b" id="h1b">Teddy & Tommy</span></h1>
+  <p class="tag" id="tag"></p>
 </header>
 
-<h2>▶ PLAY NOW</h2>
+<h2 id="liveTitle">▶ PLAY NOW</h2>
 <main class="grid live" id="live"></main>
 
 <h2 id="soonTitle">🛠 COMING SOON</h2>
 <section class="grid soon" id="soon"></section>
 
-<footer>Made by Dad with <a href="https://claude.com/claude-code">Claude Code</a> · every game works on phones, tablets and computers</footer>
+<footer id="foot"></footer>
 
 <script>
   // The games. Move a game from SOON to LIVE (with its repo name) once it's published on GitHub Pages,
-  // and put its title-screen screenshot in shots/<repo>.jpg.
+  // and put its title-screen screenshot in shots/<repo>.jpg. Every game needs an English `text` and a 中文 `zh`.
   const LIVE = [
-    { repo: 'metro-surfer', icon: '🚇', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.' },
-    { repo: 'flatty-birds', icon: '🐦', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Your brother flies along beside you.' },
-    { repo: 'fruitty-kids', icon: '🍉', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.' },
-    { repo: 'king-of-bonk', icon: '🥊', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 player or 2.' },
-    { repo: 'magic-8-teddy', icon: '🎱', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.' },
-    { repo: 'tnt-brothers', icon: '🍄', name: 'TNT Brothers', text: 'A 10-level side-scrolling platformer: jump, stomp zombies, reach the flag. 1 player or 2.' },
-    { repo: 'angry-tnt', icon: '💥', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at wobbly zombie towers. 15 levels.' },
-    { repo: 'brothers-vs-zombies', icon: '🧟', name: 'Brothers vs Zombies', text: 'Defend the backyard cookies with hoops, ice-cream stands and ✌️ shooters.' },
-    { repo: 'coop-brothers', icon: '🧩', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. Best with 2 players.' },
-    { repo: 'bomber-teddy', icon: '💣', name: 'BombasTTic!', text: 'Maze bombs and power-ups, team up or battle: Teddy vs Tommy.' },
-    { repo: 'buckett-bros', icon: '⛹️', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops.' },
-    { repo: 'swishtt-shot', icon: '🏀', name: 'SwishTT Shot', text: '投篮机: an arcade shooting machine. Sink Teddy\'s jump shot before the 60-second clock runs out.' },
-    { repo: 'volleyball-teddy', icon: '🏐', name: 'VolleyBaTTle', text: 'Jump, spike, dive: brother vs brother volleyball.' },
-    { repo: 'tennis-teddy', icon: '🎾', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the court. 1 player or 2.' },
-    { repo: 'crossy-teddy', icon: '🚦', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.' },
-    { repo: 'hundred-floors', icon: '🏢', name: '100 Floors', text: '是男人就下一百层, and 上一百层 too: how far can you go?' },
-    { repo: 'merge-teddy', icon: '🍒', name: 'WaTTermelon', text: '合成大西瓜: drop and merge fruit all the way up to a watermelon.' },
-    { repo: 'tommy-toybox', icon: '🧸', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.' },
-    { repo: 'snow-tt-bros', icon: '⛄', name: 'Snow TT Bros', text: '雪人兄弟: snow the zombies and roll them away. 20 floors, 1 or 2 players.' },
-    { repo: 'bubble-tt', icon: '🫧', name: 'Bubble TT', text: '泡泡龙: trap zombies in bubbles and pop them together. 30 levels.' },
-    { repo: 'tank-tt', icon: '🚜', name: 'Tank TT', text: '坦克大战: two tanks guard the cookie jar. Build your own maps too.' },
-    { repo: 'brawler-tt', icon: '🛏️', name: 'Double TTrouble', text: '双截龙 with pillows: a brothers street brawl, silly and safe.' },
-    { repo: 'snowball-fight-tt', icon: '❄️', name: 'SnowbaTTle', text: '打雪仗: Teddy vs Tommy behind snow forts, or team up against the snowmen.' },
-    { repo: 'tt-table-tennis', icon: '🏓', name: 'TT Table Tennis', text: '乒乓球: TT means table tennis, and Teddy & Tommy.' },
-    { repo: 'sky-tt', icon: '✈️', name: 'Sky TT', text: 'A classic plane shooter: fly a toy plane, bonk zombie blimps and bosses, and call your brother as a wingman. 1 or 2 players.' },
+    { repo: 'metro-surfer', icon: '🚇', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.', zh: '在地铁轨道上奔跑：躲火车、捡金币、拼单词。叫兄弟来保护你。' },
+    { repo: 'flatty-birds', icon: '🐦', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Your brother flies along beside you.', zh: '点一下就扇翅膀，穿过叠起来的火车和站台柱子。兄弟会陪你一起飞。' },
+    { repo: 'fruitty-kids', icon: '🍉', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.', zh: '划一下，切开飞起来的水果。小心僵尸炸弹，叫兄弟来当第二个大厨。' },
+    { repo: 'king-of-bonk', icon: '🥊', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 player or 2.', zh: '后院卡通大乱斗：Teddy 的刺拳直拳对 Tommy 的和平波。单人或双人。' },
+    { repo: 'magic-8-teddy', icon: '🎱', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.', zh: '问个问题，摇一摇魔法球，兄弟俩来回答。' },
+    { repo: 'tnt-brothers', icon: '🍄', name: 'TNT Brothers', text: 'A 10-level side-scrolling platformer: jump, stomp zombies, reach the flag. 1 player or 2.', zh: '10 关横版闯关：跳跃、踩僵尸、冲到旗杆。单人或双人。' },
+    { repo: 'angry-tnt', icon: '💥', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at wobbly zombie towers. 15 levels.', zh: '用弹弓把 Teddy 和 Tommy 弹向摇摇晃晃的僵尸塔。15 关。' },
+    { repo: 'brothers-vs-zombies', icon: '🧟', name: 'Brothers vs Zombies', text: 'Defend the backyard cookies with hoops, ice-cream stands and ✌️ shooters.', zh: '用篮筐、冰淇淋摊和 ✌️ 发射器，保卫后院的饼干。' },
+    { repo: 'coop-brothers', icon: '🧩', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. Best with 2 players.', zh: '合作解谜：橙色的路给 Teddy，薄荷绿的路给 Tommy。两个人玩最好玩。' },
+    { repo: 'bomber-teddy', icon: '💣', name: 'BombasTTic!', text: 'Maze bombs and power-ups, team up or battle: Teddy vs Tommy.', zh: '迷宫炸弹和道具：可以组队，也可以 Teddy 对 Tommy 对战。' },
+    { repo: 'buckett-bros', icon: '⛹️', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops.', zh: '2 对 2 街头篮球：Teddy & Tommy 队，扣篮加空中接力。' },
+    { repo: 'swishtt-shot', icon: '🏀', name: 'SwishTT Shot', text: '投篮机: an arcade shooting machine. Sink Teddy\'s jump shot before the 60-second clock runs out.', zh: '投篮机：60 秒倒计时结束前，用 Teddy 的跳投多进几个球。' },
+    { repo: 'volleyball-teddy', icon: '🏐', name: 'VolleyBaTTle', text: 'Jump, spike, dive: brother vs brother volleyball.', zh: '跳、扣、扑救：兄弟对决沙滩排球。' },
+    { repo: 'tennis-teddy', icon: '🎾', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the court. 1 player or 2.', zh: 'Teddy 对 Tommy 网球赛。单人或双人。' },
+    { repo: 'crossy-teddy', icon: '🚦', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.', zh: '跳过马路、小河和地铁轨道，别被压扁啦。' },
+    { repo: 'hundred-floors', icon: '🏢', name: '100 Floors', text: '是男人就下一百层, and 上一百层 too: how far can you go?', zh: '是男人就下一百层，还有上一百层：你能走多远？' },
+    { repo: 'merge-teddy', icon: '🍒', name: 'WaTTermelon', text: '合成大西瓜: drop and merge fruit all the way up to a watermelon.', zh: '合成大西瓜：丢水果、合水果，一路合成大西瓜。' },
+    { repo: 'tommy-toybox', icon: '🧸', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.', zh: '打僵尸和记忆翻牌，给小小手玩的。' },
+    { repo: 'snow-tt-bros', icon: '⛄', name: 'Snow TT Bros', text: '雪人兄弟: snow the zombies and roll them away. 20 floors, 1 or 2 players.', zh: '雪人兄弟：把僵尸冻成大雪球滚走。20 层，单人或双人。' },
+    { repo: 'bubble-tt', icon: '🫧', name: 'Bubble TT', text: '泡泡龙: trap zombies in bubbles and pop them together. 30 levels.', zh: '泡泡龙：用泡泡困住僵尸，一起戳破。30 关。' },
+    { repo: 'tank-tt', icon: '🚜', name: 'Tank TT', text: '坦克大战: two tanks guard the cookie jar. Build your own maps too.', zh: '坦克大战：两辆坦克守护饼干罐，还能自己画地图。' },
+    { repo: 'brawler-tt', icon: '🛏️', name: 'Double TTrouble', text: '双截龙 with pillows: a brothers street brawl, silly and safe.', zh: '枕头版双截龙：兄弟街头大战，搞笑又安全。' },
+    { repo: 'snowball-fight-tt', icon: '❄️', name: 'SnowbaTTle', text: '打雪仗: Teddy vs Tommy behind snow forts, or team up against the snowmen.', zh: '打雪仗：Teddy 对 Tommy 躲在雪堡后面，或者组队打雪人。' },
+    { repo: 'tt-table-tennis', icon: '🏓', name: 'TT Table Tennis', text: '乒乓球: TT means table tennis, and Teddy & Tommy.', zh: '乒乓球：TT 是 Table Tennis，也是 Teddy & Tommy。' },
+    { repo: 'sky-tt', icon: '✈️', name: 'Sky TT', text: 'A classic plane shooter: fly a toy plane, bonk zombie blimps and bosses, and call your brother as a wingman. 1 or 2 players.', zh: '经典飞机射击：开着玩具飞机打僵尸飞艇和大 Boss，叫兄弟来当僚机。单人或双人。' },
   ];
   const SOON = [];
 
-  const live = document.getElementById('live');
-  for (const g of LIVE) {
-    const d = document.createElement('article');
-    d.className = 'card';
-    d.innerHTML = `<img class="shot" src="shots/${g.repo}.jpg" alt="${g.name} title screen" width="800" height="500" loading="lazy">` +
-      `<div class="head"><span class="icon">${g.icon}</span><h3>${g.name}</h3></div><p>${g.text}</p>` +
-      `<div class="foot"><a class="play" href="https://adong.github.io/${g.repo}/">▶ PLAY</a>` +
-      `<a class="code" href="https://github.com/adong/${g.repo}">code ↗</a></div>`;
-    live.appendChild(d);
+  // English or 中文. The choice is saved under the same key the games use (kit/lang.js), so it carries into every game.
+  const KEY = 'claudeGames.lang';
+  const UI = {
+    en: {
+      title: 'Games for Teddy & Tommy', h1a: 'Games for', h1b: 'Teddy & Tommy', btn: '中文',
+      tag: 'Starring the brothers: Teddy with his boxing and jump shot, Tommy with his ✌️ Y pose. In every game you can call the other brother to come help, and <b>?</b> shows the keys.',
+      live: '▶ PLAY NOW', soon: '🛠 COMING SOON', play: '▶ PLAY', code: 'code ↗', shot: 'title screen', building: 'BEING BUILT',
+      foot: 'Made by Dad with <a href="https://claude.com/claude-code">Claude Code</a> · every game works on phones, tablets and computers · English / 中文',
+    },
+    zh: {
+      title: 'Teddy & Tommy 的游戏', h1a: '游戏乐园', h1b: 'Teddy & Tommy', btn: 'English',
+      tag: '主角是兄弟俩：会拳击和跳投的 Teddy，还有爱摆 ✌️ Y 字造型的 Tommy。每个游戏都能叫兄弟来帮忙，按 <b>?</b> 看按键。',
+      live: '▶ 马上玩', soon: '🛠 即将推出', play: '▶ 开始', code: '代码 ↗', shot: '标题画面', building: '制作中',
+      foot: '爸爸用 <a href="https://claude.com/claude-code">Claude Code</a> 做的 · 每个游戏都能在手机、平板和电脑上玩 · 中文 / English',
+    },
+  };
+  let lang = 'en';
+  try { lang = localStorage.getItem(KEY) || ''; } catch (e) { /* storage blocked */ }
+  if (lang !== 'en' && lang !== 'zh') lang = 'en'; // English until someone picks 中文 (Alan's choice)
+
+  const $ = (id) => document.getElementById(id);
+  function render() {
+    const u = UI[lang];
+    document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+    document.title = u.title;
+    $('h1a').textContent = u.h1a;
+    $('h1b').textContent = u.h1b;
+    $('tag').innerHTML = u.tag;
+    $('liveTitle').textContent = u.live;
+    $('soonTitle').textContent = u.soon;
+    $('foot').innerHTML = u.foot;
+    $('langBtn').title = u.btn; // names the language a tap switches to
+    const live = $('live');
+    live.innerHTML = '';
+    for (const g of LIVE) {
+      const d = document.createElement('article');
+      d.className = 'card';
+      d.innerHTML = `<img class="shot" src="shots/${g.repo}.jpg" alt="${g.name} ${u.shot}" width="800" height="500" loading="lazy">` +
+        `<div class="head"><span class="icon">${g.icon}</span><h3>${g.name}</h3></div><p>${lang === 'zh' ? g.zh : g.text}</p>` +
+        `<div class="foot"><a class="play" href="https://adong.github.io/${g.repo}/">${u.play}</a>` +
+        `<a class="code" href="https://github.com/adong/${g.repo}">${u.code}</a></div>`;
+      live.appendChild(d);
+    }
+    const soon = $('soon');
+    soon.innerHTML = '';
+    soon.style.display = $('soonTitle').style.display = SOON.length ? '' : 'none';
+    for (const g of SOON) {
+      const d = document.createElement('div');
+      d.className = 'card';
+      d.innerHTML = `<span class="icon">${g.icon}</span><h3>${g.name}</h3><p>${lang === 'zh' ? g.zh : g.text}</p><span class="badge">${u.building}</span>`;
+      soon.appendChild(d);
+    }
   }
-  const soon = document.getElementById('soon');
-  if (!SOON.length) soon.style.display = document.getElementById('soonTitle').style.display = 'none';
-  for (const g of SOON) {
-    const d = document.createElement('div');
-    d.className = 'card';
-    d.innerHTML = `<span class="icon">${g.icon}</span><h3>${g.name}</h3><p>${g.text}</p><span class="badge">BEING BUILT</span>`;
-    soon.appendChild(d);
-  }
+  $('langBtn').addEventListener('click', () => {
+    lang = lang === 'zh' ? 'en' : 'zh';
+    try { localStorage.setItem(KEY, lang); } catch (e) { /* storage blocked */ }
+    render();
+  });
+  render();
 </script>
 </body>
 </html>
