@@ -5,6 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a7bd6">
 <title>Games for Teddy & Tommy</title>
+<!-- The dashboard's icon: the same emoji as the README's heading, on a coloured tile. It's the browser tab's icon (the SVG, then
+     a PNG drawn below) and the iPad home screen's (apple-touch-icon). The device's own emoji font draws it: no image files. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%23ffd400'%20stroke='%2314121f'%20stroke-width='4'/%3E%3Ctext%20x='32'%20y='44'%20font-size='36'%20text-anchor='middle'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E">
+<script>
+  (function (emoji, tile) {
+    function draw(size, framed) {
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const g = c.getContext('2d');
+      if (!g) return '';
+      const u = size / 64;
+      g.fillStyle = tile;
+      if (framed) { // the tab: a rounded tile with the dashboard's dark outline
+        g.beginPath();
+        if (g.roundRect) g.roundRect(2 * u, 2 * u, 60 * u, 60 * u, 14 * u); else g.rect(2 * u, 2 * u, 60 * u, 60 * u);
+        g.fill();
+        g.lineWidth = 4 * u;
+        g.strokeStyle = '#14121f';
+        g.stroke();
+      } else g.fillRect(0, 0, size, size); // the home screen: iOS rounds the corners itself
+      g.font = `${Math.round(size * (framed ? 0.56 : 0.62))}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
+      g.textAlign = 'center';
+      const m = g.measureText(emoji);
+      const up = m.actualBoundingBoxAscent || size * 0.4, down = m.actualBoundingBoxDescent || 0;
+      g.fillText(emoji, size / 2, size / 2 + (up - down) / 2);
+      try { return c.toDataURL('image/png'); } catch (e) { return ''; }
+    }
+    const tab = draw(64, true), home = draw(180, false);
+    if (tab) document.querySelector('link[rel="icon"]').href = tab;
+    if (home) {
+      const l = document.createElement('link');
+      l.rel = 'apple-touch-icon';
+      l.href = home;
+      document.head.appendChild(l);
+    }
+  })('🎮', '#ffd400');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik:wght@500;700;800&display=swap" rel="stylesheet">
@@ -51,7 +88,10 @@
     border: 3px solid var(--ink); background: #1d3f6e;
   }
   .head { display: flex; align-items: center; gap: 10px; }
-  .live .icon { font-size: 34px; }
+  .live .icon { /* the game's icon: its emoji on its tile, the same picture as its browser tab and iPad home-screen icon */
+    flex: none; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;
+    border: 3px solid var(--ink); border-radius: 12px; font-size: 26px; filter: none; box-shadow: 0 3px 0 var(--ink);
+  }
   .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .card h3 { font-family: 'Rubik', system-ui, sans-serif; font-weight: 800; font-size: 24px; color: var(--yellow); text-shadow: 0 2px 0 var(--ink); } /* keeps FlaTTy / FruiTTy capitals (Bungee is all caps) */
   .card p { font-size: 15px; line-height: 1.4; opacity: 0.95; flex: 1; }
@@ -93,33 +133,34 @@
 
 <script>
   // The games. Move a game from SOON to LIVE (with its repo name) once it's published on GitHub Pages,
-  // and put its title-screen screenshot in shots/<repo>.jpg. Every game needs an English `text` and a 中文 `zh`.
+  // and put its title-screen screenshot in shots/<repo>.jpg. Every game needs an English `text` and a 中文 `zh`, with the same
+  // facts as the game's own README. `icon` and `tile` are its icon: the game's index.html draws the same pair for its tab.
   const LIVE = [
-    { repo: 'metro-surfer', icon: '🚇', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.', zh: '在地铁轨道上奔跑：躲火车、捡金币、拼单词。叫兄弟来保护你。' },
-    { repo: 'flatty-birds', icon: '🐦', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Your brother flies along beside you.', zh: '点一下就扇翅膀，穿过叠起来的火车和站台柱子。兄弟会陪你一起飞。' },
-    { repo: 'fruitty-kids', icon: '🍉', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.', zh: '划一下，切开飞起来的水果。小心僵尸炸弹，叫兄弟来当第二个大厨。' },
-    { repo: 'king-of-bonk', icon: '🥊', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 player or 2.', zh: '后院卡通大乱斗：Teddy 的刺拳直拳对 Tommy 的和平波。单人或双人。' },
-    { repo: 'magic-8-teddy', icon: '🎱', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.', zh: '问个问题，摇一摇魔法球，兄弟俩来回答。' },
-    { repo: 'tnt-brothers', icon: '🍄', name: 'TNT Brothers', text: 'A 10-level side-scrolling platformer: jump, stomp zombies, reach the flag. 1 player or 2.', zh: '10 关横版闯关：跳跃、踩僵尸、冲到旗杆。单人或双人。' },
-    { repo: 'angry-tnt', icon: '💥', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at wobbly zombie towers. 15 levels.', zh: '用弹弓把 Teddy 和 Tommy 弹向摇摇晃晃的僵尸塔。15 关。' },
-    { repo: 'brothers-vs-zombies', icon: '🧟', name: 'Brothers vs Zombies', text: 'Defend the backyard cookies with hoops, ice-cream stands and ✌️ shooters.', zh: '用篮筐、冰淇淋摊和 ✌️ 发射器，保卫后院的饼干。' },
-    { repo: 'coop-brothers', icon: '🧩', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. Best with 2 players.', zh: '合作解谜：橙色的路给 Teddy，薄荷绿的路给 Tommy。两个人玩最好玩。' },
-    { repo: 'bomber-teddy', icon: '💣', name: 'BombasTTic!', text: 'Maze bombs and power-ups, team up or battle: Teddy vs Tommy.', zh: '迷宫炸弹和道具：可以组队，也可以 Teddy 对 Tommy 对战。' },
-    { repo: 'buckett-bros', icon: '⛹️', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops.', zh: '2 对 2 街头篮球：Teddy & Tommy 队，扣篮加空中接力。' },
-    { repo: 'swishtt-shot', icon: '🏀', name: 'SwishTT Shot', text: 'An arcade basketball shooting machine: sink Teddy\'s jump shot before the 60-second clock runs out.', zh: '投篮机：60 秒倒计时结束前，用 Teddy 的跳投多进几个球。' },
-    { repo: 'volleyball-teddy', icon: '🏐', name: 'VolleyBaTTle', text: 'Jump, spike, dive: brother vs brother volleyball.', zh: '跳、扣、扑救：兄弟对决沙滩排球。' },
-    { repo: 'tennis-teddy', icon: '🎾', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the court. 1 player or 2.', zh: 'Teddy 对 Tommy 网球赛。单人或双人。' },
-    { repo: 'crossy-teddy', icon: '🚦', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.', zh: '跳过马路、小河和地铁轨道，别被压扁啦。' },
-    { repo: 'hundred-floors', icon: '🏢', name: '100 Floors', text: 'Drop down 100 floors, or climb up 100: how far can you go?', zh: '是男人就下一百层，还有上一百层：你能走多远？' },
-    { repo: 'merge-teddy', icon: '🍒', name: 'WaTTermelon', text: 'Drop and merge fruit, all the way up to a giant watermelon.', zh: '合成大西瓜：丢水果、合水果，一路合成大西瓜。' },
-    { repo: 'tommy-toybox', icon: '🧸', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.', zh: '打僵尸和记忆翻牌，给小小手玩的。' },
-    { repo: 'snow-tt-bros', icon: '⛄', name: 'Snow TT Bros', text: 'Snow the zombies into giant snowballs and roll them away. 20 floors, 1 or 2 players.', zh: '雪人兄弟：把僵尸冻成大雪球滚走。20 层，单人或双人。' },
-    { repo: 'bubble-tt', icon: '🫧', name: 'Bubble TT', text: 'Trap zombies in bubbles and pop them together. 30 levels.', zh: '泡泡龙：用泡泡困住僵尸，一起戳破。30 关。' },
-    { repo: 'tank-tt', icon: '🚜', name: 'Tank TT', text: 'Two tanks guard the cookie jar from zombie tanks. Build your own maps too.', zh: '坦克大战：两辆坦克守护饼干罐，还能自己画地图。' },
-    { repo: 'brawler-tt', icon: '🛏️', name: 'Double TTrouble', text: 'A brothers street brawl with pillows: silly and safe.', zh: '枕头版双截龙：兄弟街头大战，搞笑又安全。' },
-    { repo: 'snowball-fight-tt', icon: '❄️', name: 'SnowbaTTle', text: 'Snowball fight! Teddy vs Tommy behind snow forts, or team up against the snowmen.', zh: '打雪仗：Teddy 对 Tommy 躲在雪堡后面，或者组队打雪人。' },
-    { repo: 'tt-table-tennis', icon: '🏓', name: 'TT Table Tennis', text: 'Ping-pong! TT means Table Tennis, and Teddy & Tommy.', zh: '乒乓球：TT 是 Table Tennis，也是 Teddy & Tommy。' },
-    { repo: 'sky-tt', icon: '✈️', name: 'Sky TT', text: 'A classic plane shooter: fly a toy plane, bonk zombie blimps and bosses, and call your brother as a wingman. 1 or 2 players.', zh: '经典飞机射击：开着玩具飞机打僵尸飞艇和大 Boss，叫兄弟来当僚机。单人或双人。' },
+    { repo: 'metro-surfer', icon: '🚇', tile: '#ffd400', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.', zh: '在地铁轨道上奔跑：躲火车、捡金币、拼单词。叫兄弟来保护你。' },
+    { repo: 'flatty-birds', icon: '🐦', tile: '#ff8a1f', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Call your brother to fly beside you.', zh: '点一下就扇翅膀，穿过叠起来的火车和站台柱子。叫兄弟来陪你一起飞。' },
+    { repo: 'fruitty-kids', icon: '🍉', tile: '#18d4ff', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.', zh: '划一下，切开飞起来的水果。小心僵尸炸弹，叫兄弟来当第二个大厨。' },
+    { repo: 'king-of-bonk', icon: '🥊', tile: '#ffd400', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 or 2 players.', zh: '后院卡通大乱斗：Teddy 的刺拳直拳对 Tommy 的和平波。单人或双人。' },
+    { repo: 'magic-8-teddy', icon: '🎱', tile: '#9b6bff', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.', zh: '问个问题，摇一摇魔法球，兄弟俩来回答。' },
+    { repo: 'tnt-brothers', icon: '🍄', tile: '#5fe3b5', name: 'TNT Brothers', text: 'A side-scrolling platformer: jump, stomp zombies and reach the flag. 10 levels, 1 or 2 players.', zh: '横版闯关：跳跃、踩僵尸、冲到旗杆。10 关，单人或双人。' },
+    { repo: 'angry-tnt', icon: '💥', tile: '#2a7bd6', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at wobbly zombie towers. 15 levels.', zh: '用弹弓把 Teddy 和 Tommy 弹向摇摇晃晃的僵尸塔。15 关。' },
+    { repo: 'brothers-vs-zombies', icon: '🧟', tile: '#ff3d7f', name: 'Brothers vs Zombies', text: 'Defend the backyard cookies from silly zombies with hoops, ice-cream stands and ✌️ shooters. 15 levels.', zh: '用篮筐、冰淇淋摊和 ✌️ 发射器挡住捣蛋僵尸，保卫后院的饼干。15 关。' },
+    { repo: 'coop-brothers', icon: '🧩', tile: '#ff8a1f', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. 10 levels, best with 2 players.', zh: '合作解谜：橙色的路给 Teddy，薄荷绿的路给 Tommy。10 关，两个人玩最好玩。' },
+    { repo: 'bomber-teddy', icon: '💣', tile: '#ffd400', name: 'BombasTTic!', text: 'Maze bombs and power-ups: 12 stages, team up, or battle Teddy vs Tommy. 1 or 2 players.', zh: '迷宫炸弹和道具：12 关冒险，可以组队，也可以 Teddy 对 Tommy 对战。单人或双人。' },
+    { repo: 'buckett-bros', icon: '⛹️', tile: '#9b6bff', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops. 1 or 2 players.', zh: '2 对 2 街头篮球：Teddy & Tommy 队，扣篮加空中接力。单人或双人。' },
+    { repo: 'swishtt-shot', icon: '🏀', tile: '#18d4ff', name: 'SwishTT Shot', text: 'An arcade basketball shooting machine: sink Teddy\'s jump shot before the 60-second clock runs out.', zh: '投篮机：60 秒倒计时结束前，用 Teddy 的跳投多进几个球。' },
+    { repo: 'volleyball-teddy', icon: '🏐', tile: '#ff3d7f', name: 'VolleyBaTTle', text: 'Beach volleyball, brother vs brother: jump, spike and dive. 1 or 2 players.', zh: '兄弟对决沙滩排球：跳、扣、扑救。单人或双人。' },
+    { repo: 'tennis-teddy', icon: '🎾', tile: '#2a7bd6', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the park court: smash, lob, and call your brother for doubles. 1 or 2 players.', zh: 'Teddy 对 Tommy 公园网球赛：扣杀、高吊，还能叫兄弟来打双打。单人或双人。' },
+    { repo: 'crossy-teddy', icon: '🚦', tile: '#7ed957', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.', zh: '跳过马路、小河和地铁轨道，别被压扁啦。' },
+    { repo: 'hundred-floors', icon: '🏢', tile: '#ff8a1f', name: '100 Floors', text: 'Drop down 100 floors, or climb up 100: how far can you go?', zh: '是男人就下一百层，还有上一百层：你能走多远？' },
+    { repo: 'merge-teddy', icon: '🍒', tile: '#5fe3b5', name: 'WaTTermelon', text: 'Drop and merge fruit, all the way up to a giant watermelon.', zh: '合成大西瓜：丢水果、合水果，一路合成大西瓜。' },
+    { repo: 'tommy-toybox', icon: '🧸', tile: '#ff3d7f', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.', zh: '打僵尸和记忆翻牌，给小小手玩的。' },
+    { repo: 'snow-tt-bros', icon: '⛄', tile: '#18d4ff', name: 'Snow TT Bros', text: 'Snow the zombies into giant snowballs and roll them away. 20 floors, 1 or 2 players.', zh: '把僵尸冻成大雪球，滚起来撞倒一大片！20 层，单人或双人。' },
+    { repo: 'bubble-tt', icon: '🫧', tile: '#2a7bd6', name: 'Bubble TT', text: 'Trap zombies in bubbles and pop them together. 30 levels, 1 or 2 players.', zh: '吹泡泡困住僵尸，再一起戳破！30 关，单人或双人。' },
+    { repo: 'tank-tt', icon: '🚜', tile: '#ffd400', name: 'Tank TT', text: 'Two tanks guard the cookie jar from zombie tanks. 16 stages, 1 or 2 players, and you can build your own maps.', zh: '两辆坦克守护饼干罐，打退僵尸坦克。16 关，单人或双人，还能自己画地图。' },
+    { repo: 'brawler-tt', icon: '🛏️', tile: '#ff8a1f', name: 'Double TTrouble', text: 'A brothers street brawl with pillows: silly and safe. 6 stages, 1 or 2 players.', zh: '兄弟俩的枕头街头大战，搞笑又安全。6 关，单人或双人。' },
+    { repo: 'snowball-fight-tt', icon: '❄️', tile: '#2a7bd6', name: 'SnowbaTTle', text: 'Snowball fight! Teddy vs Tommy behind snow forts, or team up against the snowmen. 1 or 2 players.', zh: '打雪仗：Teddy 对 Tommy 躲在雪堡后面，或者组队打雪人。单人或双人。' },
+    { repo: 'tt-table-tennis', icon: '🏓', tile: '#7ed957', name: 'TT Table Tennis', text: 'TT means Table Tennis, and Teddy & Tommy: swipe through the ball to smash and spin it. 1 or 2 players.', zh: '乒乓球：TT 是 Table Tennis，也是 Teddy & Tommy。挥拍一划，就能扣杀、打旋转球。单人或双人。' },
+    { repo: 'sky-tt', icon: '✈️', tile: '#ff3d7f', name: 'Sky TT', text: 'A classic plane shooter: fly a toy plane, bonk zombie blimps and bosses, and call your brother as a wingman. 10 stages, 1 or 2 players.', zh: '经典飞机射击：开着玩具飞机打僵尸飞艇和大 Boss，叫兄弟来当僚机。10 关，单人或双人。' },
   ];
   const SOON = [];
 
@@ -161,7 +202,7 @@
       const d = document.createElement('article');
       d.className = 'card';
       d.innerHTML = `<img class="shot" src="shots/${g.repo}.jpg" alt="${g.name} ${u.shot}" width="800" height="500" loading="lazy">` +
-        `<div class="head"><span class="icon">${g.icon}</span><h3>${g.name}</h3></div><p>${lang === 'zh' ? g.zh : g.text}</p>` +
+        `<div class="head"><span class="icon" style="background:${g.tile}" aria-hidden="true">${g.icon}</span><h3>${g.name}</h3></div><p>${lang === 'zh' ? g.zh : g.text}</p>` +
         `<div class="foot"><a class="play" href="https://adong.github.io/${g.repo}/">${u.play}</a>` +
         `<a class="code" href="https://github.com/adong/${g.repo}">${u.code}</a></div>`;
       live.appendChild(d);
