@@ -36,7 +36,7 @@
     max-width: 1100px; margin: 34px auto 14px; font-family: var(--display); font-weight: 400; font-size: 22px;
     letter-spacing: 1px; text-shadow: 0 3px 0 var(--ink);
   }
-  .grid { max-width: 1100px; margin: 0 auto; display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   .card {
     position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 22px;
     background: rgba(20, 18, 31, 0.62); border: 3px solid #fff; color: #fff; text-decoration: none;
@@ -45,6 +45,13 @@
   .live .card:hover { transform: translateY(-4px) rotate(-0.6deg); }
   .live .card:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--ink); }
   .icon { font-size: 56px; line-height: 1; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35)); }
+  .shot {
+    display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; border-radius: 14px;
+    border: 3px solid var(--ink); background: #1d3f6e;
+  }
+  .head { display: flex; align-items: center; gap: 10px; }
+  .live .icon { font-size: 34px; }
+  .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .card h3 { font-family: 'Rubik', system-ui, sans-serif; font-weight: 800; font-size: 24px; color: var(--yellow); text-shadow: 0 2px 0 var(--ink); } /* keeps FlaTTy / FruiTTy capitals (Bungee is all caps) */
   .card p { font-size: 15px; line-height: 1.4; opacity: 0.95; flex: 1; }
   .play {
@@ -52,7 +59,7 @@
     border: 3px solid var(--ink); border-radius: 14px; padding: 8px 18px; box-shadow: 0 5px 0 var(--ink); text-decoration: none;
   }
   .play::after { content: ""; position: absolute; inset: 0; border-radius: 22px; } /* the whole card opens the game */
-  .code { position: absolute; z-index: 1; top: 14px; right: 16px; font-size: 13px; font-weight: 700; color: var(--cyan); }
+  .code { position: relative; z-index: 1; font-size: 13px; font-weight: 700; color: var(--cyan); } /* sits above the card-wide link */
   .soon .card { background: rgba(20, 18, 31, 0.35); border-style: dashed; box-shadow: none; }
   .soon .card h3 { color: #fff; font-size: 19px; }
   .soon .badge { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--ink); background: var(--mint); border-radius: 999px; padding: 4px 10px; }
@@ -70,13 +77,14 @@
 <h2>▶ PLAY NOW</h2>
 <main class="grid live" id="live"></main>
 
-<h2>🛠 COMING SOON</h2>
+<h2 id="soonTitle">🛠 COMING SOON</h2>
 <section class="grid soon" id="soon"></section>
 
 <footer>Made by Dad with <a href="https://claude.com/claude-code">Claude Code</a> · every game works on phones, tablets and computers</footer>
 
 <script>
-  // The games. Move a game from SOON to LIVE (with its repo name) once it's published on GitHub Pages.
+  // The games. Move a game from SOON to LIVE (with its repo name) once it's published on GitHub Pages,
+  // and put its title-screen screenshot in shots/<repo>.jpg.
   const LIVE = [
     { repo: 'metro-surfer', icon: '🚇', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.' },
     { repo: 'flatty-birds', icon: '🐦', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Your brother flies along beside you.' },
@@ -89,6 +97,7 @@
     { repo: 'coop-brothers', icon: '🧩', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. Best with 2 players.' },
     { repo: 'bomber-teddy', icon: '💣', name: 'BombasTTic!', text: 'Maze bombs and power-ups, team up or battle: Teddy vs Tommy.' },
     { repo: 'buckett-bros', icon: '⛹️', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops.' },
+    { repo: 'swishtt-shot', icon: '🏀', name: 'SwishTT Shot', text: '投篮机: an arcade shooting machine. Sink Teddy\'s jump shot before the 60-second clock runs out.' },
     { repo: 'volleyball-teddy', icon: '🏐', name: 'VolleyBaTTle', text: 'Jump, spike, dive: brother vs brother volleyball.' },
     { repo: 'tennis-teddy', icon: '🎾', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the court. 1 player or 2.' },
     { repo: 'crossy-teddy', icon: '🚦', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.' },
@@ -102,20 +111,20 @@
     { repo: 'snowball-fight-tt', icon: '❄️', name: 'SnowbaTTle', text: '打雪仗: Teddy vs Tommy behind snow forts, or team up against the snowmen.' },
     { repo: 'tt-table-tennis', icon: '🏓', name: 'TT Table Tennis', text: '乒乓球: TT means table tennis, and Teddy & Tommy.' },
   ];
-  const SOON = [
-    { icon: '🏀', name: 'Hoops Shootout', text: 'Arcade basketball shooting with Teddy\'s jump shot.' },
-  ];
+  const SOON = [];
 
   const live = document.getElementById('live');
   for (const g of LIVE) {
     const d = document.createElement('article');
     d.className = 'card';
-    d.innerHTML = `<span class="icon">${g.icon}</span><h3>${g.name}</h3><p>${g.text}</p>` +
-      `<a class="play" href="https://adong.github.io/${g.repo}/">▶ PLAY</a>` +
-      `<a class="code" href="https://github.com/adong/${g.repo}">code ↗</a>`;
+    d.innerHTML = `<img class="shot" src="shots/${g.repo}.jpg" alt="${g.name} title screen" width="800" height="500" loading="lazy">` +
+      `<div class="head"><span class="icon">${g.icon}</span><h3>${g.name}</h3></div><p>${g.text}</p>` +
+      `<div class="foot"><a class="play" href="https://adong.github.io/${g.repo}/">▶ PLAY</a>` +
+      `<a class="code" href="https://github.com/adong/${g.repo}">code ↗</a></div>`;
     live.appendChild(d);
   }
   const soon = document.getElementById('soon');
+  if (!SOON.length) soon.style.display = document.getElementById('soonTitle').style.display = 'none';
   for (const g of SOON) {
     const d = document.createElement('div');
     d.className = 'card';
