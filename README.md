@@ -13,10 +13,22 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | 🍉 | **FruiTTy Kids**: swipe to slice fruit, dodge zombie bombs | [play](https://adong.github.io/fruitty-kids/) | [adong/fruitty-kids](https://github.com/adong/fruitty-kids) |
 | 🥊 | **King of Bonk!**: a cartoon backyard fight, 1 or 2 players | [play](https://adong.github.io/king-of-bonk/) | [adong/king-of-bonk](https://github.com/adong/king-of-bonk) |
 | 🎱 | **Magic 8: Teddy & Tommy**: ask, shake, and the brothers answer | [play](https://adong.github.io/magic-8-teddy/) | [adong/magic-8-teddy](https://github.com/adong/magic-8-teddy) |
+| 🍄 | **TNT Brothers**: 10-level platformer, 1 or 2 players | [play](https://adong.github.io/tnt-brothers/) | [adong/tnt-brothers](https://github.com/adong/tnt-brothers) |
+| 💥 | **Angry TNT**: slingshot the brothers at zombie towers | [play](https://adong.github.io/angry-tnt/) | [adong/angry-tnt](https://github.com/adong/angry-tnt) |
+| 🧟 | **Brothers vs Zombies**: defend the backyard cookies | [play](https://adong.github.io/brothers-vs-zombies/) | [adong/brothers-vs-zombies](https://github.com/adong/brothers-vs-zombies) |
+| 🧩 | **BeTTer TogeTTher**: co-op puzzle platformer | [play](https://adong.github.io/coop-brothers/) | [adong/coop-brothers](https://github.com/adong/coop-brothers) |
+| 💣 | **BombasTTic!**: maze bombs, team up or battle | [play](https://adong.github.io/bomber-teddy/) | [adong/bomber-teddy](https://github.com/adong/bomber-teddy) |
+| ⛹️ | **BuckeTT Bros**: 2-on-2 street basketball | [play](https://adong.github.io/buckett-bros/) | [adong/buckett-bros](https://github.com/adong/buckett-bros) |
+| 🏐 | **VolleyBaTTle**: brother vs brother volleyball | [play](https://adong.github.io/volleyball-teddy/) | [adong/volleyball-teddy](https://github.com/adong/volleyball-teddy) |
+| 🎾 | **Tennis: Teddy & Tommy**: side-view tennis, 1 or 2 players | [play](https://adong.github.io/tennis-teddy/) | [adong/tennis-teddy](https://github.com/adong/tennis-teddy) |
+| 🚦 | **HoppiTTy Hop**: hop across roads, rivers and tracks | [play](https://adong.github.io/crossy-teddy/) | [adong/crossy-teddy](https://github.com/adong/crossy-teddy) |
+| 🏢 | **100 Floors**: 是男人就下一百层 / 上一百层 | [play](https://adong.github.io/hundred-floors/) | [adong/hundred-floors](https://github.com/adong/hundred-floors) |
+| 🍒 | **WaTTermelon**: 合成大西瓜 fruit merge | [play](https://adong.github.io/merge-teddy/) | [adong/merge-teddy](https://github.com/adong/merge-teddy) |
+| 🧸 | **Tommy's Toy Box**: whack-a-zombie and memory cards | [play](https://adong.github.io/tommy-toybox/) | [adong/tommy-toybox](https://github.com/adong/tommy-toybox) |
 
 ## Coming soon
 
-TNT Brothers (10 levels) 🍄 · Angry TNT 💥 · 100 Floors (是男人就下/上一百层) 🏢 · Tennis 🎾 · Volleyball 🏐 · Crossy Hop 🚦 · Brothers Co-op 🧩 · Bomber Bros 💣 · Hoops Shootout 🏀 · Street Hoops ⛹️ · Fruit Merge (合成大西瓜) 🍒 · Tommy's Toy Box 🧸 · Brothers vs Zombies 🧟 · Snow TT Bros (雪人兄弟) ⛄ · Bubble TT (泡泡龙) 🫧 · Tank TT (坦克大战) 🚜 · Pillow Brawl (双截龙) 🛏️ · Snowball Fight (打雪仗) ❄️ · TT Table Tennis (乒乓球) 🏓
+Hoops Shootout 🏀 · Snow TT Bros (雪人兄弟) ⛄ · Bubble TT (泡泡龙) 🫧 · Tank TT (坦克大战) 🚜 · Pillow Brawl (双截龙) 🛏️ · Snowball Fight (打雪仗) ❄️ · TT Table Tennis (乒乓球) 🏓
 
 ## How they're made
 
