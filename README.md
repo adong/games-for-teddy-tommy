@@ -6,7 +6,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 
 **中文：** 主角是兄弟俩：会拳击和跳投的 Teddy，还有爱摆 ✌️ Y 字造型的 Tommy。每个游戏都能叫兄弟来帮忙，按 **?** 看按键。手机、平板、电脑都能玩，不用安装。每个游戏和这个首页都有语言按钮（A文 图标），默认英文，点一下切换中文，选一次，所有游戏都记住。
 
-## 85 games / 85 个游戏
+## 95 games / 95 个游戏
 
 ### 🏮 China Series / 中国系列 (24)
 
@@ -51,7 +51,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/heroes-tt.jpg" width="200" alt="Heroes TT">](https://adong.github.io/heroes-tt/) | 🛡️ **Heroes TT**: A kid-sized team battle arena: two lanes, towers and a cookie castle to crumble. Team Teddy & Tommy vs a silly Zombie & Robot team. 1 or 2 players.<br>儿童版团队对战竞技场：两条路、防御塔和饼干城堡。Teddy & Tommy 队对战搞笑的僵尸机器人队。单人或双人。 | [play](https://adong.github.io/heroes-tt/) | [adong/heroes-tt](https://github.com/adong/heroes-tt) |
 | [<img src="shots/garden-defense-tt.jpg" width="200" alt="TT Garden Defense">](https://adong.github.io/garden-defense-tt/) | 🌻 **TT Garden Defense**: Tower defense in the garden: place toy towers to stop snack-stealing critters, who only get soaked or sleepy. 15 levels.<br>花园保卫战：放玩具塔挡住偷零食的小动物，它们只会被淋湿或睡着。15 关。 | [play](https://adong.github.io/garden-defense-tt/) | [adong/garden-defense-tt](https://github.com/adong/garden-defense-tt) |
 
-### 🕹️ Arcade Classics / 街机经典 (15)
+### 🕹️ Arcade Classics / 街机经典 (17)
 
 | | Game | Play | Code |
 |---|---|---|---|
@@ -70,6 +70,8 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/snake-tt.jpg" width="200" alt="TT Snake">](https://adong.github.io/snake-tt/) | 🐍 **TT Snake**: A garden snake game: Teddy and Tommy ride friendly snakes and eat fruit to grow. Classic, wrap-around and 10 garden levels, 1 or 2 players.<br>花园贪吃蛇：Teddy 和 Tommy 骑着蛇吃水果长尾巴；经典、穿墙和 10 个闯关花园，单人或双人。 | [play](https://adong.github.io/snake-tt/) | [adong/snake-tt](https://github.com/adong/snake-tt) |
 | [<img src="shots/brick-bonk.jpg" width="200" alt="Brick Bonk">](https://adong.github.io/brick-bonk/) | 🧱 **Brick Bonk**: Bounce the ball off a trampoline and bonk every toy brick: 18 levels, power-ups, and two paddles for 2 players.<br>打砖块！把蹦床举过头顶，把球弹上去撞掉所有积木。18 关，有道具，单人或双人。 | [play](https://adong.github.io/brick-bonk/) | [adong/brick-bonk](https://github.com/adong/brick-bonk) |
 | [<img src="shots/pinball-tt.jpg" width="200" alt="TT Pinball">](https://adong.github.io/pinball-tt/) | 🌀 **TT Pinball**: 3D pinball: flip the ball up ramps, into bumpers and targets, with multiball, on Space, Jungle and Candy tables.<br>3D 弹珠台：用挡板把弹珠打上坡道、撞弹跳柱、打倒靶子，还有多球！太空、丛林、糖果三张台子。 | [play](https://adong.github.io/pinball-tt/) | [adong/pinball-tt](https://github.com/adong/pinball-tt) |
+| [<img src="shots/gem-swap-tt.jpg" width="200" alt="TT Gem Swap">](https://adong.github.io/gem-swap-tt/) | 💎 **TT Gem Swap**: Swap fruit gems to match three: chains, rockets, bombs and rainbow stars across 40 levels with goals. Play alone, or race Froggy, Foxy or your brother.<br>消消乐：换一换水果宝石，三个连成一排就消掉，还有连击、火箭、炸弹和彩虹星。40 关，可以和 Froggy、Foxy 或兄弟比分数。 | [play](https://adong.github.io/gem-swap-tt/) | [adong/gem-swap-tt](https://github.com/adong/gem-swap-tt) |
+| [<img src="shots/falling-blocks-tt.jpg" width="200" alt="TT Falling Blocks">](https://adong.github.io/falling-blocks-tt/) | 🟪 **TT Falling Blocks**: Slide and turn the falling block shapes to fill whole rows and clear them. Play alone, as a team, or race Foxy, Froggy or your brother. A slow EASY mode for Tommy.<br>方块消除：左右移动、旋转掉下来的方块，摆满一整行就消掉！一个人玩、兄弟组队，或者和 Foxy、Froggy、兄弟比赛。简单模式适合 Tommy。 | [play](https://adong.github.io/falling-blocks-tt/) | [adong/falling-blocks-tt](https://github.com/adong/falling-blocks-tt) |
 
 ### ⚽ Sports / 体育运动 (14)
 
@@ -90,7 +92,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/homerun-tt.jpg" width="200" alt="TT Home-run Derby">](https://adong.github.io/homerun-tt/) | ⚾ **TT Home-run Derby**: Time your swing and hit it over the fence: tee-ball for Tommy, fastballs and curves for Teddy, 10 outs a round.<br>全垒打大赛：挥棒把球打出围墙！Tommy 用球座，Teddy 打快速球和曲线球，10 个出局一局。 | [play](https://adong.github.io/homerun-tt/) | [adong/homerun-tt](https://github.com/adong/homerun-tt) |
 | [<img src="shots/air-hockey-tt.jpg" width="200" alt="TT Air Hockey">](https://adong.github.io/air-hockey-tt/) | 🏒 **TT Air Hockey**: A glowing air-hockey table: knock the puck off the walls into the goal, first to 7. Play Foxy or Froggy, or each other.<br>桌上冰球：把冰球撞到墙上弹进球门，先进 7 个球就赢。和 Foxy、Froggy 或者两人对战。 | [play](https://adong.github.io/air-hockey-tt/) | [adong/air-hockey-tt](https://github.com/adong/air-hockey-tt) |
 
-### ♟️ Board Games / 棋类和桌游 (11)
+### ♟️ Board Games / 棋类和桌游 (14)
 
 | | Game | Play | Code |
 |---|---|---|---|
@@ -105,8 +107,11 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/snakes-ladders-tt.jpg" width="200" alt="TT Snakes & Ladders">](https://adong.github.io/snakes-ladders-tt/) | 🪜 **TT Snakes & Ladders**: Snakes and ladders on a 3D table board: roll, count the hops, climb the ladders, slide down the friendly snakes and land on 100 exactly. 2 to 4 players with CPU friends.<br>3D 蛇梯棋：掷骰子、数着跳，爬梯子，顺着友好的小蛇滑下来，正好停在 100 就赢！2 到 4 人，可以和电脑朋友一起玩。 | [play](https://adong.github.io/snakes-ladders-tt/) | [adong/snakes-ladders-tt](https://github.com/adong/snakes-ladders-tt) |
 | [<img src="shots/flip-discs-tt.jpg" width="200" alt="TT Flip Discs">](https://adong.github.io/flip-discs-tt/) | 🔘 **TT Flip Discs**: Trap the other colour in a line and every trapped disc flips to yours, on a little 6×6 board or the big 8×8 one. Play Foxy or each other.<br>花园里的黑白棋：把对方的棋子夹在中间，就会翻成你的颜色。6×6 小棋盘或 8×8 大棋盘，和 Foxy 或者两人对下。 | [play](https://adong.github.io/flip-discs-tt/) | [adong/flip-discs-tt](https://github.com/adong/flip-discs-tt) |
 | [<img src="shots/sea-battle-tt.jpg" width="200" alt="TT Sea Battle">](https://adong.github.io/sea-battle-tt/) | ⚓ **TT Sea Battle**: Hide your ships on a toy sea, then take turns firing the cannon: SPLASH is water, BONK is a ship. An 8×8 sea for Tommy, 10×10 for Teddy. Play Foxy or each other.<br>海战：藏好战舰，轮流朝对方的海开炮，把对方的战舰全部击沉就赢！Tommy 玩 8×8，Teddy 玩 10×10；和 Foxy 对战或两人轮流。 | [play](https://adong.github.io/sea-battle-tt/) | [adong/sea-battle-tt](https://github.com/adong/sea-battle-tt) |
+| [<img src="shots/dots-boxes-tt.jpg" width="200" alt="TT Dots & Boxes">](https://adong.github.io/dots-boxes-tt/) | ✏️ **TT Dots & Boxes**: Join the dots on a garden peg board: close the fourth side of a box to claim it and go again. Grids from 3×3 to 6×6. Play Foxy or each other.<br>点格棋：轮流把两个点连成线，连上方格的第四条边，方格就归你，还能再走一步！棋盘从 3×3 到 6×6，和 Foxy 或者两人对下。 | [play](https://adong.github.io/dots-boxes-tt/) | [adong/dots-boxes-tt](https://github.com/adong/dots-boxes-tt) |
+| [<img src="shots/mancala-tt.jpg" width="200" alt="TT Mancala">](https://adong.github.io/mancala-tt/) | 🥜 **TT Mancala**: Scoop up a pit's seeds and sow them round the board: end in your store to go again, or in an empty pit to grab the seeds across. Play Foxy or each other.<br>野餐垫上的播棋：选一个小坑，把种子一颗一颗播下去，落进仓库再走一次，落进空坑就抓走对面的种子！和 Foxy 或者两人对下。 | [play](https://adong.github.io/mancala-tt/) | [adong/mancala-tt](https://github.com/adong/mancala-tt) |
+| [<img src="shots/dominoes-tt.jpg" width="200" alt="TT Dominoes">](https://adong.github.io/dominoes-tt/) | 🔲 **TT Dominoes**: Dominoes on a felt table: match the ends with Foxy and Froggy, 2 to 4 players. Then TOPPLE! Draw lines of rainbow dominoes with your finger and knock them all down.<br>多米诺骨牌：和 Foxy、Froggy 一起玩接龙，2 到 4 人。还有推倒骨牌：用手指画线摆骨牌，推一下，看它们一张接一张倒下！ | [play](https://adong.github.io/dominoes-tt/) | [adong/dominoes-tt](https://github.com/adong/dominoes-tt) |
 
-### 🧠 Brain & Learning / 益智学习 (7)
+### 🧠 Brain & Learning / 益智学习 (12)
 
 | | Game | Play | Code |
 |---|---|---|---|
@@ -117,6 +122,11 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/protigy.jpg" width="200" alt="ProTigy">](https://adong.github.io/protigy/) | 🧮 **ProTigy**: A math adventure: win pet battles by answering math at your own level (Kindergarten to grade 6), collect 300 pets and explore seven zones.<br>数学探险：按自己的水平答题打赢宠物对战，收集 300 只宠物，走过七个地区。 | [play](https://adong.github.io/protigy/) | [adong/protigy](https://github.com/adong/protigy) |
 | [<img src="shots/memory-tt.jpg" width="200" alt="TT Memory Match">](https://adong.github.io/memory-tt/) | 🃏 **TT Memory Match**: Flip two cards and find the pairs: animals, fruit, vehicles and more, from 2 by 3 up to 6 by 6. Play alone, together or against Foxy.<br>翻牌配对：动物、水果、交通工具、中国小物……从 2×3 到 6×6，一个人玩、两人轮流或和 Foxy 比。 | [play](https://adong.github.io/memory-tt/) | [adong/memory-tt](https://github.com/adong/memory-tt) |
 | [<img src="shots/robot-coder-tt.jpg" width="200" alt="TT Robot Coder">](https://adong.github.io/robot-coder-tt/) | 🤖 **TT Robot Coder**: Program a little robot with picture blocks to reach the star: 40 puzzles, from one block for Tommy to loops and ifs for Teddy.<br>用图案指令给小机器人编程拿星星：40 关，从 Tommy 的一步小谜题到 Teddy 的循环和条件。 | [play](https://adong.github.io/robot-coder-tt/) | [adong/robot-coder-tt](https://github.com/adong/robot-coder-tt) |
+| [<img src="shots/sudoku-tt.jpg" width="200" alt="TT Sudoku">](https://adong.github.io/sudoku-tt/) | 🔢 **TT Sudoku**: Sudoku on a wooden tray: every row, column and box holds each one once. Fruit 4×4 for Tommy, number 6×6 and 9×9 for Teddy, with pencil notes and a fresh puzzle every time.<br>数独：每一行、每一列、每一宫，每样只放一次。4×4 水果数独给 Tommy，6×6 和 9×9 数字数独给 Teddy，还能写铅笔小记号。 | [play](https://adong.github.io/sudoku-tt/) | [adong/sudoku-tt](https://github.com/adong/sudoku-tt) |
+| [<img src="shots/picture-grid-tt.jpg" width="200" alt="TT Picture Grid">](https://adong.github.io/picture-grid-tt/) | 🟩 **TT Picture Grid**: Picture-grid puzzles: fill the cells the numbers tell you and a pixel picture appears. 29 pictures from a 5×5 heart to a 15×15 panda, plus a race mode.<br>数织：按照每行每列的数字涂格子，涂完就出现一幅彩色图画。29 幅图，从 5×5 爱心到 15×15 熊猫，还有比赛模式。 | [play](https://adong.github.io/picture-grid-tt/) | [adong/picture-grid-tt](https://github.com/adong/picture-grid-tt) |
+| [<img src="shots/box-push-tt.jpg" width="200" alt="TT Box Push">](https://adong.github.io/box-push-tt/) | 📦 **TT Box Push**: The warehouse box-pushing puzzle: push every crate onto a gold star, and never pull. 40 levels with undo, a team mode, a race, and your brother's hint for the next push.<br>推箱子：把每个箱子推到金色的星星上，只能推，不能拉。40 关，可以撤销，可以两兄弟一起推，还有比赛模式。 | [play](https://adong.github.io/box-push-tt/) | [adong/box-push-tt](https://github.com/adong/box-push-tt) |
+| [<img src="shots/pipes-tt.jpg" width="200" alt="TT Pipe Connect">](https://adong.github.io/pipes-tt/) | 🚰 **TT Pipe Connect**: Turn the pipes so the water runs from the tap to every flower. 40 gardens from 3×3 to 7×7, with a team mode, a race and your brother to turn a pipe for you.<br>接水管：旋转水管，让水从水龙头流到每一朵花。40 关，从 3×3 到 7×7，还有组队和比赛模式。 | [play](https://adong.github.io/pipes-tt/) | [adong/pipes-tt](https://github.com/adong/pipes-tt) |
+| [<img src="shots/spot-diff-tt.jpg" width="200" alt="TT Spot the Difference">](https://adong.github.io/spot-diff-tt/) | 🔍 **TT Spot the Difference**: Two nearly matching 3D pictures of a park, a beach, a snowy hill or the moon: tap every difference. Race Froggy or Foxy, or take turns with your brother.<br>找不同：两张几乎一样的 3D 小图（公园、海滩、雪山、月球），把不一样的地方都点出来。和 Froggy、Foxy 比，或者兄弟俩轮流找。 | [play](https://adong.github.io/spot-diff-tt/) | [adong/spot-diff-tt](https://github.com/adong/spot-diff-tt) |
 
 ### 🎨 Make & Play / 创作玩乐 (5)
 
