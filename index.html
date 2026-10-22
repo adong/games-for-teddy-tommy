@@ -69,11 +69,26 @@
   }
   h1 span { display: block; }
   h1 .b { color: var(--cyan); text-shadow: 0 6px 0 var(--yellow), 0 10px 0 var(--ink), 0 16px 26px rgba(0, 0, 0, 0.3); }
+  .count { /* how many games are live */
+    display: inline-block; margin-top: 30px; padding: 6px 18px; font-family: var(--display); font-size: clamp(20px, 3.4vw, 28px);
+    color: var(--ink); background: var(--yellow); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 5px 0 var(--ink);
+    transform: rotate(-2deg);
+  }
   .tag { margin-top: 22px; font-size: clamp(15px, 2.4vw, 19px); font-weight: 700; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); }
+  .cats { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; } /* tap a shelf to show only its games */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; border: 3px solid #fff;
+    background: rgba(20, 18, 31, 0.62); color: #fff; font-weight: 800; font-size: 15px; text-decoration: none; box-shadow: 0 4px 0 var(--ink);
+  }
+  .chip:hover { transform: translateY(-2px); }
+  .chip.on { background: var(--yellow); color: var(--ink); border-color: var(--ink); }
+  .chip b, h2 .n { font-size: 13px; font-weight: 800; color: var(--ink); background: var(--yellow); border-radius: 999px; padding: 1px 8px; }
+  .chip.on b { color: var(--yellow); background: var(--ink); }
   h2 {
     max-width: 1100px; margin: 34px auto 14px; font-family: var(--display); font-weight: 400; font-size: 22px;
     letter-spacing: 1px; text-shadow: 0 3px 0 var(--ink);
   }
+  h2 .n { display: inline-block; vertical-align: middle; margin-left: 4px; font-family: 'Rubik', system-ui, sans-serif; letter-spacing: 0; text-shadow: none; border: 2px solid var(--ink); }
   .grid { max-width: 1100px; margin: 0 auto; display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   .card {
     position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 22px;
@@ -120,11 +135,12 @@
 <button type="button" class="lang" id="langBtn" aria-label="English / 中文" title="中文"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg></button>
 <header>
   <h1><span class="a" id="h1a">Games for</span> <span class="b" id="h1b">Teddy & Tommy</span></h1>
+  <p class="count" id="count"></p>
   <p class="tag" id="tag"></p>
 </header>
 
-<h2 id="liveTitle">▶ PLAY NOW</h2>
-<main class="grid live" id="live"></main>
+<nav class="cats" id="cats"></nav>
+<main class="live" id="live"></main>
 
 <h2 id="soonTitle">🛠 COMING SOON</h2>
 <section class="grid soon" id="soon"></section>
@@ -132,95 +148,107 @@
 <footer id="foot"></footer>
 
 <script>
+  // The shelves the games sit on, in this order. A chip at the top shows one shelf at a time (#china, #sports, ...).
+  const CATS = [
+    { id: 'china', icon: '🏮', en: 'China Series', zh: '中国系列' },
+    { id: 'action', icon: '💥', en: 'Action & Adventure', zh: '动作冒险' },
+    { id: 'arcade', icon: '🕹️', en: 'Arcade Classics', zh: '街机经典' },
+    { id: 'sports', icon: '⚽', en: 'Sports', zh: '体育运动' },
+    { id: 'board', icon: '♟️', en: 'Board Games', zh: '棋类和桌游' },
+    { id: 'brain', icon: '🧠', en: 'Brain & Learning', zh: '益智学习' },
+    { id: 'create', icon: '🎨', en: 'Make & Play', zh: '创作玩乐' },
+  ];
+
   // The games. Move a game from SOON to LIVE (with its repo name) once it's published on GitHub Pages,
-  // and put its title-screen screenshot in shots/<repo>.jpg. Every game needs an English `text` and a 中文 `zh`, with the same
-  // facts as the game's own README. `icon` and `tile` are its icon: the game's index.html draws the same pair for its tab.
+  // and put its title-screen screenshot in shots/<repo>.jpg. Every game needs a shelf `cat` from CATS, an English `text` and
+  // a 中文 `zh`, with the same facts as the game's own README. `icon` and `tile` are its icon: the game's index.html draws the
+  // same pair for its tab.
   const LIVE = [
-    { repo: 'metro-surfer', icon: '🚇', tile: '#ffd400', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.', zh: '在地铁轨道上奔跑：躲火车、捡金币、拼单词。叫兄弟来保护你。' },
-    { repo: 'flatty-birds', icon: '🐦', tile: '#ff8a1f', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Call your brother to fly beside you.', zh: '点一下就扇翅膀，穿过叠起来的火车和站台柱子。叫兄弟来陪你一起飞。' },
-    { repo: 'fruitty-kids', icon: '🍉', tile: '#18d4ff', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.', zh: '划一下，切开飞起来的水果。小心僵尸炸弹，叫兄弟来当第二个大厨。' },
-    { repo: 'king-of-bonk', icon: '🥊', tile: '#ffd400', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 or 2 players.', zh: '后院卡通大乱斗：Teddy 的刺拳直拳对 Tommy 的和平波。单人或双人。' },
-    { repo: 'magic-8-teddy', icon: '🎱', tile: '#9b6bff', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.', zh: '问个问题，摇一摇魔法球，兄弟俩来回答。' },
-    { repo: 'tnt-brothers', icon: '🍄', tile: '#5fe3b5', name: 'TNT Brothers', text: 'A side-scrolling platformer: jump, stomp zombies and reach the flag. 10 levels, 1 or 2 players.', zh: '横版闯关：跳跃、踩僵尸、冲到旗杆。10 关，单人或双人。' },
-    { repo: 'angry-tnt', icon: '💥', tile: '#2a7bd6', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at wobbly zombie towers. 15 levels.', zh: '用弹弓把 Teddy 和 Tommy 弹向摇摇晃晃的僵尸塔。15 关。' },
-    { repo: 'brothers-vs-zombies', icon: '🧟', tile: '#ff3d7f', name: 'Brothers vs Zombies', text: 'Defend the backyard cookies from silly zombies with hoops, ice-cream stands and ✌️ shooters. 15 levels.', zh: '用篮筐、冰淇淋摊和 ✌️ 发射器挡住捣蛋僵尸，保卫后院的饼干。15 关。' },
-    { repo: 'coop-brothers', icon: '🧩', tile: '#ff8a1f', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. 10 levels, best with 2 players.', zh: '合作解谜：橙色的路给 Teddy，薄荷绿的路给 Tommy。10 关，两个人玩最好玩。' },
-    { repo: 'bomber-teddy', icon: '💣', tile: '#ffd400', name: 'BombasTTic!', text: 'Maze bombs and power-ups: 12 stages, team up, or battle Teddy vs Tommy. 1 or 2 players.', zh: '迷宫炸弹和道具：12 关冒险，可以组队，也可以 Teddy 对 Tommy 对战。单人或双人。' },
-    { repo: 'buckett-bros', icon: '⛹️', tile: '#9b6bff', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops. 1 or 2 players.', zh: '2 对 2 街头篮球：Teddy & Tommy 队，扣篮加空中接力。单人或双人。' },
-    { repo: 'swishtt-shot', icon: '🏀', tile: '#18d4ff', name: 'SwishTT Shot', text: 'An arcade basketball shooting machine: sink Teddy\'s jump shot before the 60-second clock runs out.', zh: '投篮机：60 秒倒计时结束前，用 Teddy 的跳投多进几个球。' },
-    { repo: 'volleyball-teddy', icon: '🏐', tile: '#ff3d7f', name: 'VolleyBaTTle', text: 'Beach volleyball, brother vs brother: jump, spike and dive. 1 or 2 players.', zh: '兄弟对决沙滩排球：跳、扣、扑救。单人或双人。' },
-    { repo: 'tennis-teddy', icon: '🎾', tile: '#2a7bd6', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the park court: smash, lob, and call your brother for doubles. 1 or 2 players.', zh: 'Teddy 对 Tommy 公园网球赛：扣杀、高吊，还能叫兄弟来打双打。单人或双人。' },
-    { repo: 'crossy-teddy', icon: '🚦', tile: '#7ed957', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.', zh: '跳过马路、小河和地铁轨道，别被压扁啦。' },
-    { repo: 'hundred-floors', icon: '🏢', tile: '#ff8a1f', name: '100 Floors', text: 'Drop down 100 floors, or climb up 100: how far can you go?', zh: '是男人就下一百层，还有上一百层：你能走多远？' },
-    { repo: 'merge-teddy', icon: '🍒', tile: '#5fe3b5', name: 'WaTTermelon', text: 'Drop and merge fruit, all the way up to a giant watermelon.', zh: '合成大西瓜：丢水果、合水果，一路合成大西瓜。' },
-    { repo: 'tommy-toybox', icon: '🧸', tile: '#ff3d7f', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.', zh: '打僵尸和记忆翻牌，给小小手玩的。' },
-    { repo: 'snow-tt-bros', icon: '⛄', tile: '#18d4ff', name: 'Snow TT Bros', text: 'Snow the zombies into giant snowballs and roll them away. 20 floors, 1 or 2 players.', zh: '把僵尸冻成大雪球，滚起来撞倒一大片！20 层，单人或双人。' },
-    { repo: 'bubble-tt', icon: '🫧', tile: '#2a7bd6', name: 'Bubble TT', text: 'Trap zombies in bubbles and pop them together. 30 levels, 1 or 2 players.', zh: '吹泡泡困住僵尸，再一起戳破！30 关，单人或双人。' },
-    { repo: 'tank-tt', icon: '🚜', tile: '#ffd400', name: 'Tank TT', text: 'Two tanks guard the cookie jar from zombie tanks. 16 stages, 1 or 2 players, and you can build your own maps.', zh: '两辆坦克守护饼干罐，打退僵尸坦克。16 关，单人或双人，还能自己画地图。' },
-    { repo: 'brawler-tt', icon: '🛏️', tile: '#ff8a1f', name: 'Double TTrouble', text: 'A brothers street brawl with pillows: silly and safe. 6 stages, 1 or 2 players.', zh: '兄弟俩的枕头街头大战，搞笑又安全。6 关，单人或双人。' },
-    { repo: 'snowball-fight-tt', icon: '❄️', tile: '#2a7bd6', name: 'SnowbaTTle', text: 'Snowball fight! Teddy vs Tommy behind snow forts, or team up against the snowmen. 1 or 2 players.', zh: '打雪仗：Teddy 对 Tommy 躲在雪堡后面，或者组队打雪人。单人或双人。' },
-    { repo: 'tt-table-tennis', icon: '🏓', tile: '#7ed957', name: 'TT Table Tennis', text: 'TT means Table Tennis, and Teddy & Tommy: swipe through the ball to smash and spin it. 1 or 2 players.', zh: '乒乓球：TT 是 Table Tennis，也是 Teddy & Tommy。挥拍一划，就能扣杀、打旋转球。单人或双人。' },
-    { repo: 'sky-tt', icon: '✈️', tile: '#ff3d7f', name: 'Sky TT', text: 'A classic plane shooter: fly a toy plane, bonk zombie blimps and bosses, and call your brother as a wingman. 10 stages, 1 or 2 players.', zh: '经典飞机射击：开着玩具飞机打僵尸飞艇和大魔王，叫兄弟来当僚机。10 关，单人或双人。' },
-    { repo: 'juggernaut', icon: '🪖', tile: '#ff7a1a', name: 'JuggernauT', text: 'A classic run-and-gun: six missions, silly rides, friends to rescue, and zombie, mummy, monkey, chubby and snowman transformations. 1 or 2 players.', zh: '经典横版射击闯关：6 个任务、搞笑坐骑、解救朋友，还会变成僵尸、木乃伊、猴子、小胖子和雪人。单人或双人。' },
-    { repo: 'heroes-tt', icon: '🛡️', tile: '#7b5cff', name: 'Heroes TT', text: 'A kid-sized team battle arena: two lanes, towers and a cookie castle to crumble. Team Teddy & Tommy vs a silly Zombie & Robot team. 1 or 2 players.', zh: '儿童版团队对战竞技场：两条路、防御塔和饼干城堡。Teddy & Tommy 队对战搞笑的僵尸机器人队。单人或双人。' },
-    { repo: 'three-kingdoms-tt', icon: '🐉', tile: '#d93a3a', name: 'Three Kingdoms TT', text: 'A Three Kingdoms beat-\'em-up: foam weapons, magic, horses and treasure chests. 6 stages, 6 heroes, 1 or 2 players.', zh: '三国故事书闯关：泡沫武器、法术、骑马、宝箱。6 关，6 位英雄，单人或双人。' },
-    { repo: 'soccer-tt', icon: '⚽', tile: '#3fae4a', name: 'Soccer TT', text: '5-a-side street soccer: Team TT against a cup ladder of silly rivals, with super shots and slow-motion goal replays. 1 or 2 players.', zh: '五人街头足球：TT 队挑战一路搞笑的对手，有超级射门和进球慢镜头回放。单人或双人。' },
-    { repo: 'tic-tac-toe-tt', icon: '⭕', tile: '#18d4ff', name: 'TT Tic-Tac-Toe', text: 'Tic-tac-toe on a big wooden board in the garden, with Teddy as X and Tommy as O: the classic game, or SPIN, where every tap turns a square over. 1 or 2 players.', zh: '花园里的大井字棋，Teddy 是 X，Tommy 是 O：普通模式，或者旋转模式（每点一下，格子就翻一面）。单人或双人。' },
-    { repo: 'spot-tt-animals', icon: '🐄', tile: '#9ed36a', name: 'Spot TT Animals', text: 'Teddy\'s own game: look through binoculars into a cornfield and count the farm animals before time runs out. 1 or 2 players.', zh: 'Teddy 自己设计的游戏：用望远镜看玉米地，在时间用完前数清农场动物。单人或双人。' },
-    { repo: 'kart-tt', icon: '🏎️', tile: '#18d4ff', name: 'TT Kart', text: 'Go-kart races: six cartoon tracks, silly item boxes, a Grand Prix trophy, split-screen for two and a time trial.', zh: '卡丁车比赛：六条卡通赛道、道具箱、奖杯大奖赛、上下分屏双人和计时赛。' },
-    { repo: 'kitchen-tt', icon: '🍳', tile: '#ff5a3c', name: 'TT Kitchen', text: 'A co-op cooking game: chop, cook, plate, serve and wash up across 10 ever-sillier kitchens. Best with 2 players.', zh: 'Teddy 和 Tommy 一起当大厨：切菜、煮饭、装盘、上菜、洗盘子，10 个越来越搞笑的厨房，两个人一起玩最好玩。' },
-    { repo: 'gomoku-tt', icon: '⚫', tile: '#ffb02e', name: 'TT Gomoku', text: 'Five in a row on a garden board: 9×9, 13×13 or the classic 15×15. 1 or 2 players.', zh: '花园里的五子棋：五个连成一线就赢！9×9、13×13 和 15×15 棋盘，单人或双人。' },
-    { repo: 'jungle-chess-tt', icon: '🦁', tile: '#7ed957', name: 'TT Jungle Chess', text: 'Jungle chess on a 3D jungle board: the elephant beats the lion, and the little rat beats the elephant. 1 or 2 players.', zh: '3D 斗兽棋：象吃狮，狮吃虎……小小的鼠能吃象！单人或双人。' },
-    { repo: 'word-pop-tt', icon: '🎈', tile: '#8ad4ff', name: 'TT Word Pop', text: 'Pop the balloons to learn words: English spelling, or Chinese characters with pinyin when you switch language. Easy for Tommy, Normal for Teddy.', zh: '戳气球学认字：英文模式练拼写，中文模式认汉字（有拼音、有图片、会读出来）。' },
-    { repo: 'cookie-chase-tt', icon: '🍪', tile: '#8ee3b0', name: 'TT Cookie Chase', text: 'A garden maze full of cookies: dodge four cheeky raccoons, drink milk to make them sleepy. 8 mazes, 1 player or both brothers together.', zh: '花园迷宫里吃饼干：躲开四只调皮的浣熊，喝牛奶让它们犯困。8 个迷宫，单人或兄弟俩一起玩。' },
-    { repo: 'flying-chess-tt', icon: '🎲', tile: '#ff6b6b', name: 'TT Flying Chess', text: 'Flying chess on a 3D board: roll a 6 to take off, jump, fly across the dashed lines and bonk planes home. 2 to 4 players, kids and CPU friends.', zh: '3D 飞行棋：掷到 6 起飞，跳、飞、把别人的飞机撞回机场。2 到 4 人，小朋友和电脑朋友一起玩。' },
-    { repo: 'mini-golf-tt', icon: '⛳', tile: '#18d4ff', name: 'TT Mini Golf', text: '3D mini golf: pull back like a slingshot and putt past ramps, bumpers, a windmill and a loop-the-loop. Two courses of 9 holes, 1 or 2 players.', zh: '3D 迷你高尔夫：像弹弓一样往后拉再放手，穿过坡道、弹弹蘑菇、大风车和大回环。两个球场各 9 洞，单人或双人。' },
-    { repo: 'snake-tt', icon: '🐍', tile: '#ff9ecd', name: 'TT Snake', text: 'A garden snake game: Teddy and Tommy ride friendly snakes and eat fruit to grow. Classic, wrap-around and 10 garden levels, 1 or 2 players.', zh: '花园贪吃蛇：Teddy 和 Tommy 骑着蛇吃水果长尾巴；经典、穿墙和 10 个闯关花园，单人或双人。' },
-    { repo: 'brick-bonk', icon: '🧱', tile: '#ff6b4a', name: 'Brick Bonk', text: 'Bounce the ball off a trampoline and bonk every toy brick: 18 levels, power-ups, and two paddles for 2 players.', zh: '打砖块！把蹦床举过头顶，把球弹上去撞掉所有积木。18 关，有道具，单人或双人。' },
-    { repo: 'dance-party-tt', icon: '🕺', tile: '#9b6bff', name: 'TT Dance Party', text: 'A rhythm dance game on a backyard disco stage: six original songs, hit the arrows on the beat and Teddy and Tommy dance.', zh: '后院迪斯科跳舞游戏：六首原创歌曲，箭头落下就按键，Teddy 和 Tommy 跟着节拍跳舞。' },
-    { repo: 'party-tt', icon: '🎉', tile: '#ff7ad9', name: 'TT Party', text: 'A party board game in a backyard theme park: roll the big die, collect coins and stars, and play a mini-game from the other games after every round.', zh: '后院游乐园派对棋：掷骰子、收金币、买星星，每回合玩一个来自兄弟俩其他游戏的小游戏。' },
-    { repo: 'protigy', icon: '🧮', tile: '#4fd8c4', name: 'ProTigy', text: 'A math adventure: win pet battles by answering math at your own level (Kindergarten to grade 6), collect 300 pets and explore seven zones.', zh: '数学探险：按自己的水平答题打赢宠物对战，收集 300 只宠物，走过七个地区。' },
-    { repo: 'chess-tt', icon: '♟️', tile: '#b48cff', name: 'TT Chess', text: 'Chess on a 3D garden board: play Foxy the CPU friend (Easy, Normal or Hard), 2 players, and a LEARN mode with a lesson for every piece.', zh: '花园里的 3D 国际象棋：和电脑朋友 Foxy 下（简单、普通、困难），两人一起玩，还有每个棋子一节小课。' },
-    { repo: 'checkers-tt', icon: '🔴', tile: '#ffd400', name: 'TT Checkers', text: 'Checkers on a picnic blanket: jumps, multi-jumps and little gold crowns, against Foxy the CPU friend or 2 players.', zh: '野餐垫上的西洋跳棋：跳吃、连跳、升王戴金冠！单人或双人。' },
-    { repo: 'archery-tt', icon: '🏹', tile: '#7ed957', name: 'TT Archery', text: 'Pull back, aim and let go: a toy bow for kids or a real archery range for scouts, with targets, balloons and moving targets.', zh: '射箭游戏：拉弓、瞄准、松手，射靶心、射气球、射会动的靶；有儿童和童子军两种样子。' },
-    { repo: 'duck-dash-tt', icon: '🦆', tile: '#2ec4b6', name: 'TT Duck Dash', text: 'Duck and clay shooting: 1 duck, 2 ducks or clays, with a suction-cup blaster for kids or a real shotgun for scouts. 1 or 2 players.', zh: '打鸭子和飞碟射击：一只鸭、两只鸭或飞碟，儿童模式用吸盘枪，童子军模式用真霰弹枪。单人或双人。' },
-    { repo: 'kung-fu-tt', icon: '🥋', tile: '#ff4b3a', name: 'Kung Fu TT', text: 'Side-scrolling kung fu: punch and kick floor by floor up a five-floor temple to rescue the Golden Panda. 1 or 2 players.', zh: '功夫小子：出拳踢腿，一层一层打上五层寺庙，救出金熊猫。单人或双人。' },
-    { repo: 'xiangqi-tt', icon: '🏮', tile: '#ffd400', name: 'TT Xiangqi', text: 'Chinese chess in a garden pavilion: play Foxy (Easy, Normal or Hard) or each other, plus a lesson for every piece.', zh: '花园亭子里的 3D 中国象棋：和电脑朋友 Foxy 下（简单、普通、困难）或两人对下，还有每个棋子一节小课。' },
-    { repo: 'go-tt', icon: '⚪', tile: '#2e9e6b', name: 'TT Go', text: 'Go on a garden board: start with Capture Go, then play the whole game with counting, and learn liberties, atari and eyes.', zh: '花园里的围棋：先玩吃子棋，再下完整围棋数子，还能学气、提子、打吃和两只眼。' },
-    { repo: 'star-checkers-tt', icon: '⭐', tile: '#6c5ce7', name: 'TT Star Checkers', text: 'Chinese checkers on a 3D star board: step or hop, chain long jumps and race your marbles home. 2 to 6 players with CPU friends.', zh: '3D 跳棋：走一步或者连跳，先把弹珠全部送到对面的角就赢。2 到 6 人，可以和电脑朋友一起玩。' },
-    { repo: 'bowling-tt', icon: '🎳', tile: '#8a5cff', name: 'TT Bowling', text: '3D ten-pin bowling: swipe to bowl, strikes and spares with celebrations, bumpers and a ramp for Tommy. 1 to 4 players.', zh: '3D 保龄球：滑动出球，全中、补中都有庆祝；Tommy 可以开护栏、用滑梯推球。1 到 4 人。' },
-    { repo: 'fishing-tt', icon: '🎣', tile: '#2f9be0', name: 'TT Fishing', text: 'Cast, wait for the bite and reel in 31 cartoon fish at five spots, then take a photo and let them go. A fish book to fill.', zh: '钓鱼游戏：在五个地方钓 31 种卡通鱼，拍照后放生，集满鱼类图鉴。' },
-    { repo: 'blocks-tt', icon: '⛏️', tile: '#6fd45a', name: 'TT Blocks', text: 'A block-building world on your own little island: dig, build, fly, find golden stars and meet puffy sheep and chicks.', zh: '方块建造世界：在自己的小岛上挖、建造、飞行，找金星星，和小羊、小鸡交朋友。' },
-    { repo: 'four-in-a-row-tt', icon: '🟡', tile: '#6c5ce7', name: 'TT Four in a Row', text: 'Drop discs into the big garden board: four in a row wins, or five on the big board. Play Foxy or each other.', zh: '花园里的四子棋：棋子掉到最下面，连成四个就赢；大棋盘要连成五个。单人或双人。' },
-    { repo: 'klotski-tt', icon: '🔳', tile: '#ff5a4e', name: 'TT Slide Escape', text: 'The classic sliding-block escape: slide the blocks so the big panda gets out of the gate. 42 levels and a race mode.', zh: '华容道：移动方块，让曹操从出口逃出去。42 关，还有比赛模式。' },
-    { repo: 'memory-tt', icon: '🃏', tile: '#a77bff', name: 'TT Memory Match', text: 'Flip two cards and find the pairs: animals, fruit, vehicles and more, from 2 by 3 up to 6 by 6. Play alone, together or against Foxy.', zh: '翻牌配对：动物、水果、交通工具、中国小物……从 2×3 到 6×6，一个人玩、两人轮流或和 Foxy 比。' },
-    { repo: 'pinball-tt', icon: '🌀', tile: '#7c4dff', name: 'TT Pinball', text: '3D pinball: flip the ball up ramps, into bumpers and targets, with multiball, on Space, Jungle and Candy tables.', zh: '3D 弹珠台：用挡板把弹珠打上坡道、撞弹跳柱、打倒靶子，还有多球！太空、丛林、糖果三张台子。' },
-    { repo: 'homerun-tt', icon: '⚾', tile: '#3a6cf4', name: 'TT Home-run Derby', text: 'Time your swing and hit it over the fence: tee-ball for Tommy, fastballs and curves for Teddy, 10 outs a round.', zh: '全垒打大赛：挥棒把球打出围墙！Tommy 用球座，Teddy 打快速球和曲线球，10 个出局一局。' },
-    { repo: 'air-hockey-tt', icon: '🏒', tile: '#29e6ff', name: 'TT Air Hockey', text: 'A glowing air-hockey table: knock the puck off the walls into the goal, first to 7. Play Foxy or Froggy, or each other.', zh: '桌上冰球：把冰球撞到墙上弹进球门，先进 7 个球就赢。和 Foxy、Froggy 或者两人对战。' },
-    { repo: 'garden-defense-tt', icon: '🌻', tile: '#18d4ff', name: 'TT Garden Defense', text: 'Tower defense in the garden: place toy towers to stop snack-stealing critters, who only get soaked or sleepy. 15 levels.', zh: '花园保卫战：放玩具塔挡住偷零食的小动物，它们只会被淋湿或睡着。15 关。' },
-    { repo: 'dragon-boat-tt', icon: '🚣', tile: '#3fd0c9', name: 'TT Dragon Boat', text: 'A Dragon Boat Festival race: drum and row in rhythm, dodge rocks, grab zongzi for speed and beat the other boats.', zh: '赛龙舟：端午节到了！跟着鼓声划船，绕开石头，吃粽子加速，看谁先到终点。' },
-    { repo: 'robot-coder-tt', icon: '🤖', tile: '#ff8a1f', name: 'TT Robot Coder', text: 'Program a little robot with picture blocks to reach the star: 40 puzzles, from one block for Tommy to loops and ifs for Teddy.', zh: '用图案指令给小机器人编程拿星星：40 关，从 Tommy 的一步小谜题到 Teddy 的循环和条件。' },
-    { repo: 'music-maker-tt', icon: '🎹', tile: '#ffc93c', name: 'TT Music Maker', text: 'A music studio: play piano, xylophone, a guzheng-style pluck, flute and drums, record, make beats and learn five songs.', zh: '音乐工作室：弹钢琴、木琴、古筝、笛子和架子鼓，录音、做节拍，学五首儿歌。' },
-    { repo: 'monkey-king-tt', icon: '🐒', tile: '#ffb703', name: 'TT Monkey King', text: 'A side-scrolling Journey to the West: swing a golden staff that grows, cloud-somersault and turn into a bird, fish or rock, from Flower Fruit Mountain to the Flaming Mountains. 1 or 2 players.', zh: '西游记闯关：Teddy 和 Tommy 是孙悟空的小徒弟，挥金箍棒、翻筋斗云、七十二变，从花果山一路闯到火焰山。单人或双人。' },
-    { repo: 'zodiac-race-tt', icon: '🐀', tile: '#e8382f', name: 'TT Zodiac Race', text: 'The Great Race of the Chinese zodiac: pick one of the twelve animals and race the others across the river to the Jade Emperor\'s palace, each with its own power from the story.', zh: '十二生肖大赛跑：选一个生肖，骑着它游过大河，跑到玉皇大帝的宫殿！老鼠骑牛，龙会飞，老虎游得快；还能查一查全家人属什么。' },
-    { repo: 'lion-dance-tt', icon: '🥁', tile: '#ffb627', name: 'TT Lion Dance', text: 'A lion dance rhythm game: Teddy is the head and Tommy the tail. Hit the drums, cymbals and gong on the beat and the lion dances across the plum-blossom poles.', zh: '舞狮节奏游戏：Teddy 当狮头，Tommy 当狮尾，跟着锣鼓敲鼓、打镲、敲锣，让狮子跳过梅花桩，最后采青。' },
-    { repo: 'dumplings-tt', icon: '🥟', tile: '#e8382f', name: 'TT Dumpling Shop', text: 'A New Year dumpling shop: read the picture orders, roll, fill and fold the dumplings, then boil, steam or fry them for the zodiac animals. Tangyuan, buns and spring rolls come later.', zh: '包饺子：开一家小饺子店，看图片点菜，擀皮、放馅、包好，再煮、蒸或炸给十二生肖客人；后面还有汤圆、包子和春卷。' },
-    { repo: 'pinyin-pop-tt', icon: '🔤', tile: '#e8382f', name: 'TT Pinyin Pop', text: 'Pop the pinyin balloons in a Chinese courtyard: Tommy pops initials and finals, Teddy whole syllables and tones, with a picture for every word and the word said out loud.', zh: '戳气球学拼音：Tommy 戳声母和韵母，Teddy 戳整个音节和声调，每个词都有图片，还会读出来。' },
-    { repo: 'jianzi-tt', icon: '🪶', tile: '#35c28f', name: 'TT Jianzi', text: 'Kick the shuttlecock in an old Beijing courtyard: time your kicks with the inside, outside, knee or heel, learn tricks and pass it between brothers.', zh: '踢毽子：在北京小院里看准时机，用脚内侧、脚外侧、膝盖或脚后跟把毽子踢起来，学花样，兄弟俩传毽子。' },
-    { repo: 'tile-link-tt', icon: '🀄', tile: '#1f9a6a', name: 'TT Tile Link', text: 'Link matching mahjong-style tiles with a line of up to two turns, in zodiac, China, fruit and animal sets. Play alone, or race Froggy, Foxy or your brother.', zh: '连连看：找到两张一样的牌，用最多转两个弯的线连起来。十二生肖、中国、水果、动物四套牌，可以和 Froggy、Foxy 或兄弟比赛。' },
-    { repo: 'kite-tt', icon: '🪁', tile: '#7fd3ff', name: 'TT Kite Festival', text: 'Make a dragon, swallow, butterfly or goldfish kite, run into the wind to launch it, then let out the string to catch stars and lanterns. The brothers can fly together.', zh: '放风筝：做一只龙、燕子、蝴蝶或金鱼风筝，迎着风跑起来，放线飞上天，接住星星和灯笼。兄弟俩可以一起放。' },
-    { repo: 'tangram-tt', icon: '🔷', tile: '#ffb02e', name: 'TT Tangram', text: 'Drag, turn and flip the seven tangram pieces to fill a shadow: 60 pictures with all twelve zodiac animals, a race mode and a mat for your own designs.', zh: '七巧板：拖动、旋转、翻转七块板，把影子填满。60 幅图，包括十二生肖，还能比赛，也能自己创作。' },
-    { repo: 'wise-kids-tt', icon: '🐘', tile: '#21a37f', name: 'TT Wise Kids', text: 'Five classic Chinese stories, each a picture book and then three puzzles: weigh the elephant, the thirsty crow, the broken vat, the horse race and sharing the pears.', zh: '聪明小故事：曹冲称象、乌鸦喝水、司马光砸缸、田忌赛马、孔融让梨，每个故事先看图画书，再闯三关。' },
-    { repo: 'calligraphy-tt', icon: '🖌️', tile: '#2fb45a', name: 'TT Brush Writing', text: 'Write Chinese characters with a brush in stroke order, from 一, 二 and 三 to 山, 水 and 火, with a red seal and a star for each one and a picture card that says it out loud.', zh: '写汉字：拿起毛笔按笔顺一笔一画描红，从一、二、三写到山、水、火，写对了盖红印章、得星星，每个字都有图片卡。' },
-    { repo: 'abacus-tt', icon: '🟤', tile: '#f2c14e', name: 'TT Abacus', text: 'Learn the abacus in an old Chinese shop: Tommy counts and sets numbers, Teddy adds and subtracts with carrying and borrowing, plus bead puzzles and an abacus race.', zh: '学打算盘：Tommy 数一数、摆数字，Teddy 用口诀算加减，还有珠子谜题和算盘比赛。' },
-    { repo: 'new-year-tt', icon: '🧧', tile: '#233b8f', name: 'TT New Year', text: 'Four Spring Festival games on New Year\'s Eve: catch red envelopes, design a fireworks show, hang couplets and the upside-down 福, and scare the Nian away with drums, lanterns and firecrackers.', zh: '春节小游戏：接红包、设计烟花秀、贴春联和倒着的福字，再敲鼓、亮灯笼、放鞭炮，把年兽吓跑！' },
-    { repo: 'moon-festival-tt', icon: '🥮', tile: '#2d2a7a', name: 'TT Moon Festival', text: 'The Mid-Autumn Festival under the full moon: bake mooncakes for the guests, guess the lantern riddles, then hop up to the moon to meet Chang\'e and the Jade Rabbit.', zh: '中秋节：给客人做月饼，在灯笼下猜灯谜，再一路跳上月亮去见嫦娥和玉兔！' },
-    { repo: 'great-wall-tt', icon: '🏯', tile: '#c8352b', name: 'TT Great Wall', text: 'Build five real stretches of the Great Wall, from the sea at Shanhaiguan to the desert at Jiayuguan, then light the beacon towers one by one at dusk. 1 or 2 players.', zh: '修长城，点烽火！把城墙、烽火台和台阶拼进山脊上的空位，修好五段长城，天黑了再一座接一座点亮烽火台。单人或双人。' },
-    { repo: 'shadow-theater-tt', icon: '🎭', tile: '#f5c96a', name: 'TT Shadow Theater', text: 'Build shadow puppets and put on a show behind a lamp-lit screen, then paint Beijing opera faces and learn what each colour says about a character.', zh: '做皮影，在幕布后面演皮影戏，录下来放给大家看；再给京剧脸谱涂颜色，学一学每种颜色代表什么样的人。' },
-    { repo: 'snakes-ladders-tt', icon: '🪜', tile: '#7ed957', name: 'TT Snakes & Ladders', text: 'Snakes and ladders on a 3D table board: roll, count the hops, climb the ladders, slide down the friendly snakes and land on 100 exactly. 2 to 4 players with CPU friends.', zh: '3D 蛇梯棋：掷骰子、数着跳，爬梯子，顺着友好的小蛇滑下来，正好停在 100 就赢！2 到 4 人，可以和电脑朋友一起玩。' },
-    { repo: 'flip-discs-tt', icon: '🔘', tile: '#2fb36b', name: 'TT Flip Discs', text: 'Trap the other colour in a line and every trapped disc flips to yours, on a little 6×6 board or the big 8×8 one. Play Foxy or each other.', zh: '花园里的黑白棋：把对方的棋子夹在中间，就会翻成你的颜色。6×6 小棋盘或 8×8 大棋盘，和 Foxy 或者两人对下。' },
-    { repo: 'sea-battle-tt', icon: '⚓', tile: '#8fe3ff', name: 'TT Sea Battle', text: 'Hide your ships on a toy sea, then take turns firing the cannon: SPLASH is water, BONK is a ship. An 8×8 sea for Tommy, 10×10 for Teddy. Play Foxy or each other.', zh: '海战：藏好战舰，轮流朝对方的海开炮，把对方的战舰全部击沉就赢！Tommy 玩 8×8，Teddy 玩 10×10；和 Foxy 对战或两人轮流。' },
-    { repo: 'mahjong-junior-tt', icon: '🎴', tile: '#f1c453', name: 'TT Mahjong Junior', text: 'A simple family mahjong: learn the tiles, make chows, pungs and a pair, and shout HÚ! Play Foxy, Panda and Froggy, or both brothers at one table. No money, just points.', zh: '小麻将：认识麻将牌，凑吃、碰和一个对子，就喊“胡”！和 Foxy、Panda、Froggy 一起玩，或者兄弟俩一起上桌。不玩钱，只玩分数。' },
+    { repo: 'metro-surfer', cat: 'action', icon: '🚇', tile: '#ffd400', name: 'Metro Surfer', text: 'Run the subway tracks, dodge trains, grab coins and spell words. Call your brother to keep you safe.', zh: '在地铁轨道上奔跑：躲火车、捡金币、拼单词。叫兄弟来保护你。' },
+    { repo: 'flatty-birds', cat: 'arcade', icon: '🐦', tile: '#ff8a1f', name: 'FlaTTy Birds', text: 'Tap to flap between stacked trains and station pillars. Call your brother to fly beside you.', zh: '点一下就扇翅膀，穿过叠起来的火车和站台柱子。叫兄弟来陪你一起飞。' },
+    { repo: 'fruitty-kids', cat: 'arcade', icon: '🍉', tile: '#18d4ff', name: 'FruiTTy Kids', text: 'Swipe to slice flying fruit. Watch out for the zombie bombs, and call your brother as a second chef.', zh: '划一下，切开飞起来的水果。小心僵尸炸弹，叫兄弟来当第二个大厨。' },
+    { repo: 'king-of-bonk', cat: 'action', icon: '🥊', tile: '#ffd400', name: 'King of Bonk!', text: 'A cartoon backyard fight: Teddy\'s jab-straight vs Tommy\'s peace wave. 1 or 2 players.', zh: '后院卡通大乱斗：Teddy 的刺拳直拳对 Tommy 的和平波。单人或双人。' },
+    { repo: 'magic-8-teddy', cat: 'create', icon: '🎱', tile: '#9b6bff', name: 'Magic 8: Teddy & Tommy', text: 'Ask a question and shake the ball, and the brothers answer.', zh: '问个问题，摇一摇魔法球，兄弟俩来回答。' },
+    { repo: 'tnt-brothers', cat: 'action', icon: '🍄', tile: '#5fe3b5', name: 'TNT Brothers', text: 'A side-scrolling platformer: jump, stomp zombies and reach the flag. 10 levels, 1 or 2 players.', zh: '横版闯关：跳跃、踩僵尸、冲到旗杆。10 关，单人或双人。' },
+    { repo: 'angry-tnt', cat: 'arcade', icon: '💥', tile: '#2a7bd6', name: 'Angry TNT', text: 'Slingshot Teddy and Tommy at wobbly zombie towers. 15 levels.', zh: '用弹弓把 Teddy 和 Tommy 弹向摇摇晃晃的僵尸塔。15 关。' },
+    { repo: 'brothers-vs-zombies', cat: 'action', icon: '🧟', tile: '#ff3d7f', name: 'Brothers vs Zombies', text: 'Defend the backyard cookies from silly zombies with hoops, ice-cream stands and ✌️ shooters. 15 levels.', zh: '用篮筐、冰淇淋摊和 ✌️ 发射器挡住捣蛋僵尸，保卫后院的饼干。15 关。' },
+    { repo: 'coop-brothers', cat: 'brain', icon: '🧩', tile: '#ff8a1f', name: 'BeTTer TogeTTher', text: 'Teamwork puzzles: orange paths for Teddy, mint ones for Tommy. 10 levels, best with 2 players.', zh: '合作解谜：橙色的路给 Teddy，薄荷绿的路给 Tommy。10 关，两个人玩最好玩。' },
+    { repo: 'bomber-teddy', cat: 'arcade', icon: '💣', tile: '#ffd400', name: 'BombasTTic!', text: 'Maze bombs and power-ups: 12 stages, team up, or battle Teddy vs Tommy. 1 or 2 players.', zh: '迷宫炸弹和道具：12 关冒险，可以组队，也可以 Teddy 对 Tommy 对战。单人或双人。' },
+    { repo: 'buckett-bros', cat: 'sports', icon: '⛹️', tile: '#9b6bff', name: 'BuckeTT Bros', text: '2-on-2 street basketball: Team Teddy & Tommy, with dunks and alley-oops. 1 or 2 players.', zh: '2 对 2 街头篮球：Teddy & Tommy 队，扣篮加空中接力。单人或双人。' },
+    { repo: 'swishtt-shot', cat: 'sports', icon: '🏀', tile: '#18d4ff', name: 'SwishTT Shot', text: 'An arcade basketball shooting machine: sink Teddy\'s jump shot before the 60-second clock runs out.', zh: '投篮机：60 秒倒计时结束前，用 Teddy 的跳投多进几个球。' },
+    { repo: 'volleyball-teddy', cat: 'sports', icon: '🏐', tile: '#ff3d7f', name: 'VolleyBaTTle', text: 'Beach volleyball, brother vs brother: jump, spike and dive. 1 or 2 players.', zh: '兄弟对决沙滩排球：跳、扣、扑救。单人或双人。' },
+    { repo: 'tennis-teddy', cat: 'sports', icon: '🎾', tile: '#2a7bd6', name: 'Tennis: Teddy & Tommy', text: 'Teddy vs Tommy on the park court: smash, lob, and call your brother for doubles. 1 or 2 players.', zh: 'Teddy 对 Tommy 公园网球赛：扣杀、高吊，还能叫兄弟来打双打。单人或双人。' },
+    { repo: 'crossy-teddy', cat: 'arcade', icon: '🚦', tile: '#7ed957', name: 'HoppiTTy Hop', text: 'Hop across roads, rivers and subway tracks without getting squished.', zh: '跳过马路、小河和地铁轨道，别被压扁啦。' },
+    { repo: 'hundred-floors', cat: 'arcade', icon: '🏢', tile: '#ff8a1f', name: '100 Floors', text: 'Drop down 100 floors, or climb up 100: how far can you go?', zh: '是男人就下一百层，还有上一百层：你能走多远？' },
+    { repo: 'merge-teddy', cat: 'arcade', icon: '🍒', tile: '#5fe3b5', name: 'WaTTermelon', text: 'Drop and merge fruit, all the way up to a giant watermelon.', zh: '合成大西瓜：丢水果、合水果，一路合成大西瓜。' },
+    { repo: 'tommy-toybox', cat: 'brain', icon: '🧸', tile: '#ff3d7f', name: 'Tommy\'s Toy Box', text: 'Whack-a-zombie and memory cards for little hands.', zh: '打僵尸和记忆翻牌，给小小手玩的。' },
+    { repo: 'snow-tt-bros', cat: 'arcade', icon: '⛄', tile: '#18d4ff', name: 'Snow TT Bros', text: 'Snow the zombies into giant snowballs and roll them away. 20 floors, 1 or 2 players.', zh: '把僵尸冻成大雪球，滚起来撞倒一大片！20 层，单人或双人。' },
+    { repo: 'bubble-tt', cat: 'arcade', icon: '🫧', tile: '#2a7bd6', name: 'Bubble TT', text: 'Trap zombies in bubbles and pop them together. 30 levels, 1 or 2 players.', zh: '吹泡泡困住僵尸，再一起戳破！30 关，单人或双人。' },
+    { repo: 'tank-tt', cat: 'arcade', icon: '🚜', tile: '#ffd400', name: 'Tank TT', text: 'Two tanks guard the cookie jar from zombie tanks. 16 stages, 1 or 2 players, and you can build your own maps.', zh: '两辆坦克守护饼干罐，打退僵尸坦克。16 关，单人或双人，还能自己画地图。' },
+    { repo: 'brawler-tt', cat: 'action', icon: '🛏️', tile: '#ff8a1f', name: 'Double TTrouble', text: 'A brothers street brawl with pillows: silly and safe. 6 stages, 1 or 2 players.', zh: '兄弟俩的枕头街头大战，搞笑又安全。6 关，单人或双人。' },
+    { repo: 'snowball-fight-tt', cat: 'action', icon: '❄️', tile: '#2a7bd6', name: 'SnowbaTTle', text: 'Snowball fight! Teddy vs Tommy behind snow forts, or team up against the snowmen. 1 or 2 players.', zh: '打雪仗：Teddy 对 Tommy 躲在雪堡后面，或者组队打雪人。单人或双人。' },
+    { repo: 'tt-table-tennis', cat: 'sports', icon: '🏓', tile: '#7ed957', name: 'TT Table Tennis', text: 'TT means Table Tennis, and Teddy & Tommy: swipe through the ball to smash and spin it. 1 or 2 players.', zh: '乒乓球：TT 是 Table Tennis，也是 Teddy & Tommy。挥拍一划，就能扣杀、打旋转球。单人或双人。' },
+    { repo: 'sky-tt', cat: 'arcade', icon: '✈️', tile: '#ff3d7f', name: 'Sky TT', text: 'A classic plane shooter: fly a toy plane, bonk zombie blimps and bosses, and call your brother as a wingman. 10 stages, 1 or 2 players.', zh: '经典飞机射击：开着玩具飞机打僵尸飞艇和大魔王，叫兄弟来当僚机。10 关，单人或双人。' },
+    { repo: 'juggernaut', cat: 'action', icon: '🪖', tile: '#ff7a1a', name: 'JuggernauT', text: 'A classic run-and-gun: six missions, silly rides, friends to rescue, and zombie, mummy, monkey, chubby and snowman transformations. 1 or 2 players.', zh: '经典横版射击闯关：6 个任务、搞笑坐骑、解救朋友，还会变成僵尸、木乃伊、猴子、小胖子和雪人。单人或双人。' },
+    { repo: 'heroes-tt', cat: 'action', icon: '🛡️', tile: '#7b5cff', name: 'Heroes TT', text: 'A kid-sized team battle arena: two lanes, towers and a cookie castle to crumble. Team Teddy & Tommy vs a silly Zombie & Robot team. 1 or 2 players.', zh: '儿童版团队对战竞技场：两条路、防御塔和饼干城堡。Teddy & Tommy 队对战搞笑的僵尸机器人队。单人或双人。' },
+    { repo: 'three-kingdoms-tt', cat: 'china', icon: '🐉', tile: '#d93a3a', name: 'Three Kingdoms TT', text: 'A Three Kingdoms beat-\'em-up: foam weapons, magic, horses and treasure chests. 6 stages, 6 heroes, 1 or 2 players.', zh: '三国故事书闯关：泡沫武器、法术、骑马、宝箱。6 关，6 位英雄，单人或双人。' },
+    { repo: 'soccer-tt', cat: 'sports', icon: '⚽', tile: '#3fae4a', name: 'Soccer TT', text: '5-a-side street soccer: Team TT against a cup ladder of silly rivals, with super shots and slow-motion goal replays. 1 or 2 players.', zh: '五人街头足球：TT 队挑战一路搞笑的对手，有超级射门和进球慢镜头回放。单人或双人。' },
+    { repo: 'tic-tac-toe-tt', cat: 'board', icon: '⭕', tile: '#18d4ff', name: 'TT Tic-Tac-Toe', text: 'Tic-tac-toe on a big wooden board in the garden, with Teddy as X and Tommy as O: the classic game, or SPIN, where every tap turns a square over. 1 or 2 players.', zh: '花园里的大井字棋，Teddy 是 X，Tommy 是 O：普通模式，或者旋转模式（每点一下，格子就翻一面）。单人或双人。' },
+    { repo: 'spot-tt-animals', cat: 'brain', icon: '🐄', tile: '#9ed36a', name: 'Spot TT Animals', text: 'Teddy\'s own game: look through binoculars into a cornfield and count the farm animals before time runs out. 1 or 2 players.', zh: 'Teddy 自己设计的游戏：用望远镜看玉米地，在时间用完前数清农场动物。单人或双人。' },
+    { repo: 'kart-tt', cat: 'sports', icon: '🏎️', tile: '#18d4ff', name: 'TT Kart', text: 'Go-kart races: six cartoon tracks, silly item boxes, a Grand Prix trophy, split-screen for two and a time trial.', zh: '卡丁车比赛：六条卡通赛道、道具箱、奖杯大奖赛、上下分屏双人和计时赛。' },
+    { repo: 'kitchen-tt', cat: 'create', icon: '🍳', tile: '#ff5a3c', name: 'TT Kitchen', text: 'A co-op cooking game: chop, cook, plate, serve and wash up across 10 ever-sillier kitchens. Best with 2 players.', zh: 'Teddy 和 Tommy 一起当大厨：切菜、煮饭、装盘、上菜、洗盘子，10 个越来越搞笑的厨房，两个人一起玩最好玩。' },
+    { repo: 'gomoku-tt', cat: 'board', icon: '⚫', tile: '#ffb02e', name: 'TT Gomoku', text: 'Five in a row on a garden board: 9×9, 13×13 or the classic 15×15. 1 or 2 players.', zh: '花园里的五子棋：五个连成一线就赢！9×9、13×13 和 15×15 棋盘，单人或双人。' },
+    { repo: 'jungle-chess-tt', cat: 'china', icon: '🦁', tile: '#7ed957', name: 'TT Jungle Chess', text: 'Jungle chess on a 3D jungle board: the elephant beats the lion, and the little rat beats the elephant. 1 or 2 players.', zh: '3D 斗兽棋：象吃狮，狮吃虎……小小的鼠能吃象！单人或双人。' },
+    { repo: 'word-pop-tt', cat: 'brain', icon: '🎈', tile: '#8ad4ff', name: 'TT Word Pop', text: 'Pop the balloons to learn words: English spelling, or Chinese characters with pinyin when you switch language. Easy for Tommy, Normal for Teddy.', zh: '戳气球学认字：英文模式练拼写，中文模式认汉字（有拼音、有图片、会读出来）。' },
+    { repo: 'cookie-chase-tt', cat: 'arcade', icon: '🍪', tile: '#8ee3b0', name: 'TT Cookie Chase', text: 'A garden maze full of cookies: dodge four cheeky raccoons, drink milk to make them sleepy. 8 mazes, 1 player or both brothers together.', zh: '花园迷宫里吃饼干：躲开四只调皮的浣熊，喝牛奶让它们犯困。8 个迷宫，单人或兄弟俩一起玩。' },
+    { repo: 'flying-chess-tt', cat: 'board', icon: '🎲', tile: '#ff6b6b', name: 'TT Flying Chess', text: 'Flying chess on a 3D board: roll a 6 to take off, jump, fly across the dashed lines and bonk planes home. 2 to 4 players, kids and CPU friends.', zh: '3D 飞行棋：掷到 6 起飞，跳、飞、把别人的飞机撞回机场。2 到 4 人，小朋友和电脑朋友一起玩。' },
+    { repo: 'mini-golf-tt', cat: 'sports', icon: '⛳', tile: '#18d4ff', name: 'TT Mini Golf', text: '3D mini golf: pull back like a slingshot and putt past ramps, bumpers, a windmill and a loop-the-loop. Two courses of 9 holes, 1 or 2 players.', zh: '3D 迷你高尔夫：像弹弓一样往后拉再放手，穿过坡道、弹弹蘑菇、大风车和大回环。两个球场各 9 洞，单人或双人。' },
+    { repo: 'snake-tt', cat: 'arcade', icon: '🐍', tile: '#ff9ecd', name: 'TT Snake', text: 'A garden snake game: Teddy and Tommy ride friendly snakes and eat fruit to grow. Classic, wrap-around and 10 garden levels, 1 or 2 players.', zh: '花园贪吃蛇：Teddy 和 Tommy 骑着蛇吃水果长尾巴；经典、穿墙和 10 个闯关花园，单人或双人。' },
+    { repo: 'brick-bonk', cat: 'arcade', icon: '🧱', tile: '#ff6b4a', name: 'Brick Bonk', text: 'Bounce the ball off a trampoline and bonk every toy brick: 18 levels, power-ups, and two paddles for 2 players.', zh: '打砖块！把蹦床举过头顶，把球弹上去撞掉所有积木。18 关，有道具，单人或双人。' },
+    { repo: 'dance-party-tt', cat: 'create', icon: '🕺', tile: '#9b6bff', name: 'TT Dance Party', text: 'A rhythm dance game on a backyard disco stage: six original songs, hit the arrows on the beat and Teddy and Tommy dance.', zh: '后院迪斯科跳舞游戏：六首原创歌曲，箭头落下就按键，Teddy 和 Tommy 跟着节拍跳舞。' },
+    { repo: 'party-tt', cat: 'board', icon: '🎉', tile: '#ff7ad9', name: 'TT Party', text: 'A party board game in a backyard theme park: roll the big die, collect coins and stars, and play a mini-game from the other games after every round.', zh: '后院游乐园派对棋：掷骰子、收金币、买星星，每回合玩一个来自兄弟俩其他游戏的小游戏。' },
+    { repo: 'protigy', cat: 'brain', icon: '🧮', tile: '#4fd8c4', name: 'ProTigy', text: 'A math adventure: win pet battles by answering math at your own level (Kindergarten to grade 6), collect 300 pets and explore seven zones.', zh: '数学探险：按自己的水平答题打赢宠物对战，收集 300 只宠物，走过七个地区。' },
+    { repo: 'chess-tt', cat: 'board', icon: '♟️', tile: '#b48cff', name: 'TT Chess', text: 'Chess on a 3D garden board: play Foxy the CPU friend (Easy, Normal or Hard), 2 players, and a LEARN mode with a lesson for every piece.', zh: '花园里的 3D 国际象棋：和电脑朋友 Foxy 下（简单、普通、困难），两人一起玩，还有每个棋子一节小课。' },
+    { repo: 'checkers-tt', cat: 'board', icon: '🔴', tile: '#ffd400', name: 'TT Checkers', text: 'Checkers on a picnic blanket: jumps, multi-jumps and little gold crowns, against Foxy the CPU friend or 2 players.', zh: '野餐垫上的西洋跳棋：跳吃、连跳、升王戴金冠！单人或双人。' },
+    { repo: 'archery-tt', cat: 'sports', icon: '🏹', tile: '#7ed957', name: 'TT Archery', text: 'Pull back, aim and let go: a toy bow for kids or a real archery range for scouts, with targets, balloons and moving targets.', zh: '射箭游戏：拉弓、瞄准、松手，射靶心、射气球、射会动的靶；有儿童和童子军两种样子。' },
+    { repo: 'duck-dash-tt', cat: 'sports', icon: '🦆', tile: '#2ec4b6', name: 'TT Duck Dash', text: 'Duck and clay shooting: 1 duck, 2 ducks or clays, with a suction-cup blaster for kids or a real shotgun for scouts. 1 or 2 players.', zh: '打鸭子和飞碟射击：一只鸭、两只鸭或飞碟，儿童模式用吸盘枪，童子军模式用真霰弹枪。单人或双人。' },
+    { repo: 'kung-fu-tt', cat: 'china', icon: '🥋', tile: '#ff4b3a', name: 'Kung Fu TT', text: 'Side-scrolling kung fu: punch and kick floor by floor up a five-floor temple to rescue the Golden Panda. 1 or 2 players.', zh: '功夫小子：出拳踢腿，一层一层打上五层寺庙，救出金熊猫。单人或双人。' },
+    { repo: 'xiangqi-tt', cat: 'china', icon: '🏮', tile: '#ffd400', name: 'TT Xiangqi', text: 'Chinese chess in a garden pavilion: play Foxy (Easy, Normal or Hard) or each other, plus a lesson for every piece.', zh: '花园亭子里的 3D 中国象棋：和电脑朋友 Foxy 下（简单、普通、困难）或两人对下，还有每个棋子一节小课。' },
+    { repo: 'go-tt', cat: 'china', icon: '⚪', tile: '#2e9e6b', name: 'TT Go', text: 'Go on a garden board: start with Capture Go, then play the whole game with counting, and learn liberties, atari and eyes.', zh: '花园里的围棋：先玩吃子棋，再下完整围棋数子，还能学气、提子、打吃和两只眼。' },
+    { repo: 'star-checkers-tt', cat: 'board', icon: '⭐', tile: '#6c5ce7', name: 'TT Star Checkers', text: 'Chinese checkers on a 3D star board: step or hop, chain long jumps and race your marbles home. 2 to 6 players with CPU friends.', zh: '3D 跳棋：走一步或者连跳，先把弹珠全部送到对面的角就赢。2 到 6 人，可以和电脑朋友一起玩。' },
+    { repo: 'bowling-tt', cat: 'sports', icon: '🎳', tile: '#8a5cff', name: 'TT Bowling', text: '3D ten-pin bowling: swipe to bowl, strikes and spares with celebrations, bumpers and a ramp for Tommy. 1 to 4 players.', zh: '3D 保龄球：滑动出球，全中、补中都有庆祝；Tommy 可以开护栏、用滑梯推球。1 到 4 人。' },
+    { repo: 'fishing-tt', cat: 'sports', icon: '🎣', tile: '#2f9be0', name: 'TT Fishing', text: 'Cast, wait for the bite and reel in 31 cartoon fish at five spots, then take a photo and let them go. A fish book to fill.', zh: '钓鱼游戏：在五个地方钓 31 种卡通鱼，拍照后放生，集满鱼类图鉴。' },
+    { repo: 'blocks-tt', cat: 'create', icon: '⛏️', tile: '#6fd45a', name: 'TT Blocks', text: 'A block-building world on your own little island: dig, build, fly, find golden stars and meet puffy sheep and chicks.', zh: '方块建造世界：在自己的小岛上挖、建造、飞行，找金星星，和小羊、小鸡交朋友。' },
+    { repo: 'four-in-a-row-tt', cat: 'board', icon: '🟡', tile: '#6c5ce7', name: 'TT Four in a Row', text: 'Drop discs into the big garden board: four in a row wins, or five on the big board. Play Foxy or each other.', zh: '花园里的四子棋：棋子掉到最下面，连成四个就赢；大棋盘要连成五个。单人或双人。' },
+    { repo: 'klotski-tt', cat: 'china', icon: '🔳', tile: '#ff5a4e', name: 'TT Slide Escape', text: 'The classic sliding-block escape: slide the blocks so the big panda gets out of the gate. 42 levels and a race mode.', zh: '华容道：移动方块，让曹操从出口逃出去。42 关，还有比赛模式。' },
+    { repo: 'memory-tt', cat: 'brain', icon: '🃏', tile: '#a77bff', name: 'TT Memory Match', text: 'Flip two cards and find the pairs: animals, fruit, vehicles and more, from 2 by 3 up to 6 by 6. Play alone, together or against Foxy.', zh: '翻牌配对：动物、水果、交通工具、中国小物……从 2×3 到 6×6，一个人玩、两人轮流或和 Foxy 比。' },
+    { repo: 'pinball-tt', cat: 'arcade', icon: '🌀', tile: '#7c4dff', name: 'TT Pinball', text: '3D pinball: flip the ball up ramps, into bumpers and targets, with multiball, on Space, Jungle and Candy tables.', zh: '3D 弹珠台：用挡板把弹珠打上坡道、撞弹跳柱、打倒靶子，还有多球！太空、丛林、糖果三张台子。' },
+    { repo: 'homerun-tt', cat: 'sports', icon: '⚾', tile: '#3a6cf4', name: 'TT Home-run Derby', text: 'Time your swing and hit it over the fence: tee-ball for Tommy, fastballs and curves for Teddy, 10 outs a round.', zh: '全垒打大赛：挥棒把球打出围墙！Tommy 用球座，Teddy 打快速球和曲线球，10 个出局一局。' },
+    { repo: 'air-hockey-tt', cat: 'sports', icon: '🏒', tile: '#29e6ff', name: 'TT Air Hockey', text: 'A glowing air-hockey table: knock the puck off the walls into the goal, first to 7. Play Foxy or Froggy, or each other.', zh: '桌上冰球：把冰球撞到墙上弹进球门，先进 7 个球就赢。和 Foxy、Froggy 或者两人对战。' },
+    { repo: 'garden-defense-tt', cat: 'action', icon: '🌻', tile: '#18d4ff', name: 'TT Garden Defense', text: 'Tower defense in the garden: place toy towers to stop snack-stealing critters, who only get soaked or sleepy. 15 levels.', zh: '花园保卫战：放玩具塔挡住偷零食的小动物，它们只会被淋湿或睡着。15 关。' },
+    { repo: 'dragon-boat-tt', cat: 'china', icon: '🚣', tile: '#3fd0c9', name: 'TT Dragon Boat', text: 'A Dragon Boat Festival race: drum and row in rhythm, dodge rocks, grab zongzi for speed and beat the other boats.', zh: '赛龙舟：端午节到了！跟着鼓声划船，绕开石头，吃粽子加速，看谁先到终点。' },
+    { repo: 'robot-coder-tt', cat: 'brain', icon: '🤖', tile: '#ff8a1f', name: 'TT Robot Coder', text: 'Program a little robot with picture blocks to reach the star: 40 puzzles, from one block for Tommy to loops and ifs for Teddy.', zh: '用图案指令给小机器人编程拿星星：40 关，从 Tommy 的一步小谜题到 Teddy 的循环和条件。' },
+    { repo: 'music-maker-tt', cat: 'create', icon: '🎹', tile: '#ffc93c', name: 'TT Music Maker', text: 'A music studio: play piano, xylophone, a guzheng-style pluck, flute and drums, record, make beats and learn five songs.', zh: '音乐工作室：弹钢琴、木琴、古筝、笛子和架子鼓，录音、做节拍，学五首儿歌。' },
+    { repo: 'monkey-king-tt', cat: 'china', icon: '🐒', tile: '#ffb703', name: 'TT Monkey King', text: 'A side-scrolling Journey to the West: swing a golden staff that grows, cloud-somersault and turn into a bird, fish or rock, from Flower Fruit Mountain to the Flaming Mountains. 1 or 2 players.', zh: '西游记闯关：Teddy 和 Tommy 是孙悟空的小徒弟，挥金箍棒、翻筋斗云、七十二变，从花果山一路闯到火焰山。单人或双人。' },
+    { repo: 'zodiac-race-tt', cat: 'china', icon: '🐀', tile: '#e8382f', name: 'TT Zodiac Race', text: 'The Great Race of the Chinese zodiac: pick one of the twelve animals and race the others across the river to the Jade Emperor\'s palace, each with its own power from the story.', zh: '十二生肖大赛跑：选一个生肖，骑着它游过大河，跑到玉皇大帝的宫殿！老鼠骑牛，龙会飞，老虎游得快；还能查一查全家人属什么。' },
+    { repo: 'lion-dance-tt', cat: 'china', icon: '🥁', tile: '#ffb627', name: 'TT Lion Dance', text: 'A lion dance rhythm game: Teddy is the head and Tommy the tail. Hit the drums, cymbals and gong on the beat and the lion dances across the plum-blossom poles.', zh: '舞狮节奏游戏：Teddy 当狮头，Tommy 当狮尾，跟着锣鼓敲鼓、打镲、敲锣，让狮子跳过梅花桩，最后采青。' },
+    { repo: 'dumplings-tt', cat: 'china', icon: '🥟', tile: '#e8382f', name: 'TT Dumpling Shop', text: 'A New Year dumpling shop: read the picture orders, roll, fill and fold the dumplings, then boil, steam or fry them for the zodiac animals. Tangyuan, buns and spring rolls come later.', zh: '包饺子：开一家小饺子店，看图片点菜，擀皮、放馅、包好，再煮、蒸或炸给十二生肖客人；后面还有汤圆、包子和春卷。' },
+    { repo: 'pinyin-pop-tt', cat: 'china', icon: '🔤', tile: '#e8382f', name: 'TT Pinyin Pop', text: 'Pop the pinyin balloons in a Chinese courtyard: Tommy pops initials and finals, Teddy whole syllables and tones, with a picture for every word and the word said out loud.', zh: '戳气球学拼音：Tommy 戳声母和韵母，Teddy 戳整个音节和声调，每个词都有图片，还会读出来。' },
+    { repo: 'jianzi-tt', cat: 'china', icon: '🪶', tile: '#35c28f', name: 'TT Jianzi', text: 'Kick the shuttlecock in an old Beijing courtyard: time your kicks with the inside, outside, knee or heel, learn tricks and pass it between brothers.', zh: '踢毽子：在北京小院里看准时机，用脚内侧、脚外侧、膝盖或脚后跟把毽子踢起来，学花样，兄弟俩传毽子。' },
+    { repo: 'tile-link-tt', cat: 'china', icon: '🀄', tile: '#1f9a6a', name: 'TT Tile Link', text: 'Link matching mahjong-style tiles with a line of up to two turns, in zodiac, China, fruit and animal sets. Play alone, or race Froggy, Foxy or your brother.', zh: '连连看：找到两张一样的牌，用最多转两个弯的线连起来。十二生肖、中国、水果、动物四套牌，可以和 Froggy、Foxy 或兄弟比赛。' },
+    { repo: 'kite-tt', cat: 'china', icon: '🪁', tile: '#7fd3ff', name: 'TT Kite Festival', text: 'Make a dragon, swallow, butterfly or goldfish kite, run into the wind to launch it, then let out the string to catch stars and lanterns. The brothers can fly together.', zh: '放风筝：做一只龙、燕子、蝴蝶或金鱼风筝，迎着风跑起来，放线飞上天，接住星星和灯笼。兄弟俩可以一起放。' },
+    { repo: 'tangram-tt', cat: 'china', icon: '🔷', tile: '#ffb02e', name: 'TT Tangram', text: 'Drag, turn and flip the seven tangram pieces to fill a shadow: 60 pictures with all twelve zodiac animals, a race mode and a mat for your own designs.', zh: '七巧板：拖动、旋转、翻转七块板，把影子填满。60 幅图，包括十二生肖，还能比赛，也能自己创作。' },
+    { repo: 'wise-kids-tt', cat: 'china', icon: '🐘', tile: '#21a37f', name: 'TT Wise Kids', text: 'Five classic Chinese stories, each a picture book and then three puzzles: weigh the elephant, the thirsty crow, the broken vat, the horse race and sharing the pears.', zh: '聪明小故事：曹冲称象、乌鸦喝水、司马光砸缸、田忌赛马、孔融让梨，每个故事先看图画书，再闯三关。' },
+    { repo: 'calligraphy-tt', cat: 'china', icon: '🖌️', tile: '#2fb45a', name: 'TT Brush Writing', text: 'Write Chinese characters with a brush in stroke order, from one, two and three to mountain, water and fire, with a red seal and a star for each one and a picture card that says it out loud.', zh: '写汉字：拿起毛笔按笔顺一笔一画描红，从一、二、三写到山、水、火，写对了盖红印章、得星星，每个字都有图片卡。' },
+    { repo: 'abacus-tt', cat: 'china', icon: '🟤', tile: '#f2c14e', name: 'TT Abacus', text: 'Learn the abacus in an old Chinese shop: Tommy counts and sets numbers, Teddy adds and subtracts with carrying and borrowing, plus bead puzzles and an abacus race.', zh: '学打算盘：Tommy 数一数、摆数字，Teddy 用口诀算加减，还有珠子谜题和算盘比赛。' },
+    { repo: 'new-year-tt', cat: 'china', icon: '🧧', tile: '#233b8f', name: 'TT New Year', text: 'Four Spring Festival games on New Year\'s Eve: catch red envelopes, design a fireworks show, hang couplets and the upside-down good-luck sign, and scare the Nian away with drums, lanterns and firecrackers.', zh: '春节小游戏：接红包、设计烟花秀、贴春联和倒着的福字，再敲鼓、亮灯笼、放鞭炮，把年兽吓跑！' },
+    { repo: 'moon-festival-tt', cat: 'china', icon: '🥮', tile: '#2d2a7a', name: 'TT Moon Festival', text: 'The Mid-Autumn Festival under the full moon: bake mooncakes for the guests, guess the lantern riddles, then hop up to the moon to meet Chang\'e and the Jade Rabbit.', zh: '中秋节：给客人做月饼，在灯笼下猜灯谜，再一路跳上月亮去见嫦娥和玉兔！' },
+    { repo: 'great-wall-tt', cat: 'china', icon: '🏯', tile: '#c8352b', name: 'TT Great Wall', text: 'Build five real stretches of the Great Wall, from the sea at Shanhaiguan to the desert at Jiayuguan, then light the beacon towers one by one at dusk. 1 or 2 players.', zh: '修长城，点烽火！把城墙、烽火台和台阶拼进山脊上的空位，修好五段长城，天黑了再一座接一座点亮烽火台。单人或双人。' },
+    { repo: 'shadow-theater-tt', cat: 'china', icon: '🎭', tile: '#f5c96a', name: 'TT Shadow Theater', text: 'Build shadow puppets and put on a show behind a lamp-lit screen, then paint Beijing opera faces and learn what each colour says about a character.', zh: '做皮影，在幕布后面演皮影戏，录下来放给大家看；再给京剧脸谱涂颜色，学一学每种颜色代表什么样的人。' },
+    { repo: 'snakes-ladders-tt', cat: 'board', icon: '🪜', tile: '#7ed957', name: 'TT Snakes & Ladders', text: 'Snakes and ladders on a 3D table board: roll, count the hops, climb the ladders, slide down the friendly snakes and land on 100 exactly. 2 to 4 players with CPU friends.', zh: '3D 蛇梯棋：掷骰子、数着跳，爬梯子，顺着友好的小蛇滑下来，正好停在 100 就赢！2 到 4 人，可以和电脑朋友一起玩。' },
+    { repo: 'flip-discs-tt', cat: 'board', icon: '🔘', tile: '#2fb36b', name: 'TT Flip Discs', text: 'Trap the other colour in a line and every trapped disc flips to yours, on a little 6×6 board or the big 8×8 one. Play Foxy or each other.', zh: '花园里的黑白棋：把对方的棋子夹在中间，就会翻成你的颜色。6×6 小棋盘或 8×8 大棋盘，和 Foxy 或者两人对下。' },
+    { repo: 'sea-battle-tt', cat: 'board', icon: '⚓', tile: '#8fe3ff', name: 'TT Sea Battle', text: 'Hide your ships on a toy sea, then take turns firing the cannon: SPLASH is water, BONK is a ship. An 8×8 sea for Tommy, 10×10 for Teddy. Play Foxy or each other.', zh: '海战：藏好战舰，轮流朝对方的海开炮，把对方的战舰全部击沉就赢！Tommy 玩 8×8，Teddy 玩 10×10；和 Foxy 对战或两人轮流。' },
+    { repo: 'mahjong-junior-tt', cat: 'china', icon: '🎴', tile: '#f1c453', name: 'TT Mahjong Junior', text: 'A simple family mahjong: learn the tiles, make chows, pungs and a pair, and shout HÚ! Play Foxy, Panda and Froggy, or both brothers at one table. No money, just points.', zh: '小麻将：认识麻将牌，凑吃、碰和一个对子，就喊“胡”！和 Foxy、Panda、Froggy 一起玩，或者兄弟俩一起上桌。不玩钱，只玩分数。' },
   ];
   const SOON = [];
 
@@ -230,13 +258,13 @@
     en: {
       title: 'Games for Teddy & Tommy', h1a: 'Games for', h1b: 'Teddy & Tommy', btn: '中文',
       tag: 'Starring the brothers: Teddy with his boxing and jump shot, Tommy with his ✌️ Y pose. In every game you can call the other brother to come help, and <b>?</b> shows the keys.',
-      live: '▶ PLAY NOW', soon: '🛠 COMING SOON', play: '▶ PLAY', code: 'code ↗', shot: 'title screen', building: 'BEING BUILT',
+      count: '🎮 {n} GAMES', all: 'All', soon: '🛠 COMING SOON', play: '▶ PLAY', code: 'code ↗', shot: 'title screen', building: 'BEING BUILT',
       foot: 'Made by Dad with <a href="https://claude.com/claude-code">Claude Code</a> · every game works on phones, tablets and computers',
     },
     zh: {
       title: 'Teddy & Tommy 的游戏', h1a: '游戏乐园', h1b: 'Teddy & Tommy', btn: 'English',
       tag: '主角是兄弟俩：会拳击和跳投的 Teddy，还有爱摆 ✌️ Y 字造型的 Tommy。每个游戏都能叫兄弟来帮忙，按 <b>?</b> 看按键。',
-      live: '▶ 马上玩', soon: '🛠 即将推出', play: '▶ 开始', code: '代码 ↗', shot: '标题画面', building: '制作中',
+      count: '🎮 {n} 个游戏', all: '全部', soon: '🛠 即将推出', play: '▶ 开始', code: '代码 ↗', shot: '标题画面', building: '制作中',
       foot: '爸爸用 <a href="https://claude.com/claude-code">Claude Code</a> 做的 · 每个游戏都能在手机、平板和电脑上玩',
     },
   };
@@ -245,27 +273,47 @@
   if (lang !== 'en' && lang !== 'zh') lang = 'en'; // English until someone picks 中文 (Alan's choice)
 
   const $ = (id) => document.getElementById(id);
+  const stray = LIVE.filter((g) => !CATS.some((c) => c.id === g.cat));
+  if (stray.length) console.error('games with no shelf in CATS (they are not shown):', stray.map((g) => g.repo));
+
+  function card(g, u) {
+    const d = document.createElement('article');
+    d.className = 'card';
+    d.innerHTML = `<img class="shot" src="shots/${g.repo}.jpg" alt="${g.name} ${u.shot}" width="800" height="500" loading="lazy">` +
+      `<div class="head"><span class="icon" style="background:${g.tile}" aria-hidden="true">${g.icon}</span><h3>${g.name}</h3></div><p>${lang === 'zh' ? g.zh : g.text}</p>` +
+      `<div class="foot"><a class="play" href="https://adong.github.io/${g.repo}/">${u.play}</a>` +
+      `<a class="code" href="https://github.com/adong/${g.repo}">${u.code}</a></div>`;
+    return d;
+  }
+
   function render() {
     const u = UI[lang];
     document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
     document.title = u.title;
     $('h1a').textContent = u.h1a;
     $('h1b').textContent = u.h1b;
+    $('count').textContent = u.count.replace('{n}', LIVE.length);
     $('tag').innerHTML = u.tag;
-    $('liveTitle').textContent = u.live;
     $('soonTitle').textContent = u.soon;
     $('foot').innerHTML = u.foot;
     $('langBtn').title = u.btn; // names the language a tap switches to
+    const hash = location.hash.slice(1);
+    const pick = CATS.some((c) => c.id === hash) ? hash : 'all';
+    const chip = (id, icon, name, n) => `<a class="chip${id === pick ? ' on' : ''}" href="#${id}">${icon} ${name} <b>${n}</b></a>`;
+    $('cats').innerHTML = chip('all', '🎮', u.all, LIVE.length) +
+      CATS.map((c) => chip(c.id, c.icon, c[lang], LIVE.filter((g) => g.cat === c.id).length)).join('');
     const live = $('live');
     live.innerHTML = '';
-    for (const g of LIVE) {
-      const d = document.createElement('article');
-      d.className = 'card';
-      d.innerHTML = `<img class="shot" src="shots/${g.repo}.jpg" alt="${g.name} ${u.shot}" width="800" height="500" loading="lazy">` +
-        `<div class="head"><span class="icon" style="background:${g.tile}" aria-hidden="true">${g.icon}</span><h3>${g.name}</h3></div><p>${lang === 'zh' ? g.zh : g.text}</p>` +
-        `<div class="foot"><a class="play" href="https://adong.github.io/${g.repo}/">${u.play}</a>` +
-        `<a class="code" href="https://github.com/adong/${g.repo}">${u.code}</a></div>`;
-      live.appendChild(d);
+    for (const c of CATS) {
+      if (pick !== 'all' && pick !== c.id) continue;
+      const games = LIVE.filter((g) => g.cat === c.id);
+      const shelf = document.createElement('section');
+      shelf.innerHTML = `<h2>${c.icon} ${c[lang]} <span class="n">${games.length}</span></h2>`;
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      for (const g of games) grid.appendChild(card(g, u));
+      shelf.appendChild(grid);
+      live.appendChild(shelf);
     }
     const soon = $('soon');
     soon.innerHTML = '';
@@ -282,6 +330,7 @@
     try { localStorage.setItem(KEY, lang); } catch (e) { /* storage blocked */ }
     render();
   });
+  window.addEventListener('hashchange', render);
   render();
 </script>
 </body>
