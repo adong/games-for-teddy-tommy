@@ -6,7 +6,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 
 **中文：** 主角是兄弟俩：会拳击和跳投的 Teddy，还有爱摆 ✌️ Y 字造型的 Tommy。每个游戏都能叫兄弟来帮忙，按 **?** 看按键。手机、平板、电脑都能玩，不用安装。每个游戏和这个首页都有语言按钮（A文 图标），默认英文，点一下切换中文，选一次，所有游戏都记住。
 
-## 149 games / 149 个游戏
+## 150 games / 150 个游戏
 
 ### 🏮 China Series / 中国系列 (24)
 
@@ -56,7 +56,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/firefighter-tt.jpg" width="200" alt="TT Firefighters">](https://adong.github.io/firefighter-tt/) | 🚒 **TT Firefighters**: Drive the fire truck, raise the ladder and spray out the silly googly-eyed fires, then rescue the kittens and collect a safety card for every street.<br>消防员：开消防车，升起梯子，喷水灭掉会做鬼脸的火，救下小猫，每条街都能拿到一张安全卡片。 | [play](https://adong.github.io/firefighter-tt/) | [adong/firefighter-tt](https://github.com/adong/firefighter-tt) |
 | [<img src="shots/dino-safari-tt.jpg" width="200" alt="TT Dino Safari">](https://adong.github.io/dino-safari-tt/) | 🦖 **TT Dino Safari**: A photo safari through a dinosaur valley: frame 12 kinds of dinosaur from the jeep, earn stars for great shots and fill your dino book with fun facts.<br>恐龙探险：坐吉普车穿过恐龙山谷，给 12 种恐龙拍照，拍得好就得星星，每张照片都附带恐龙小知识。 | [play](https://adong.github.io/dino-safari-tt/) | [adong/dino-safari-tt](https://github.com/adong/dino-safari-tt) |
 
-### 🕹️ Arcade Classics / 街机经典 (46)
+### 🕹️ Arcade Classics / 街机经典 (47)
 
 | | Game | Play | Code |
 |---|---|---|---|
@@ -106,6 +106,7 @@ Browser games starring two brothers: Teddy, with his boxing combos and basketbal
 | [<img src="shots/toy-arena-tt.jpg" width="200" alt="TT Toy Arena">](https://adong.github.io/toy-arena-tt/) | 🐥 **TT Toy Arena**: Wind-up toys march onto the play rug: move one way and squirt your water blaster another, put the toys to sleep and rescue the lost ducklings. 1 or 2 players.<br>玩具竞技场：发条玩具走上游戏地毯，一边走一边用水枪往任意方向喷，让玩具睡着，再救出迷路的小鸭子。单人或双人。 | [play](https://adong.github.io/toy-arena-tt/) | [adong/toy-arena-tt](https://github.com/adong/toy-arena-tt) |
 | [<img src="shots/candy-jumper-tt.jpg" width="200" alt="TT Candy Jumper">](https://adong.github.io/candy-jumper-tt/) | 🍬 **TT Candy Jumper**: Leap sky high in a superhero cape, open it to float down slowly, and grab all 24 fizzy candies. Take the glowing one each time for a bigger bonus.<br>跳跳糖果：披着披风跳得高高的，打开披风慢慢飘下来，把 24 颗跳跳糖果全抓到。每次抓发光的那颗，奖励更多。 | [play](https://adong.github.io/candy-jumper-tt/) | [adong/candy-jumper-tt](https://github.com/adong/candy-jumper-tt) |
 | [<img src="shots/rainbow-climb-tt.jpg" width="200" alt="TT Rainbow Climb">](https://adong.github.io/rainbow-climb-tt/) | 🌦️ **TT Rainbow Climb**: Throw rainbows to make bridges and climb tall islands as the water rises, turn critters into fruit and reach the treasure chest at the top. 4 islands of 4 rounds.<br>彩虹桥：扔出彩虹当桥往上爬，水一直在涨，把小怪物变成水果，爬到小岛顶上的宝箱。4 座小岛，每座 4 关。 | [play](https://adong.github.io/rainbow-climb-tt/) | [adong/rainbow-climb-tt](https://github.com/adong/rainbow-climb-tt) |
+| [<img src="shots/elevator-dash-tt.jpg" width="200" alt="TT Elevator Dash">](https://adong.github.io/elevator-dash-tt/) | 🛗 **TT Elevator Dash**: Ride the lifts down a toy hotel and deliver each parcel to the door with the glowing light. Toss a soft pillow at the silly bellhop robots, then jump in the delivery van. 5 hotels of 12 floors.<br>电梯快递：坐电梯一层一层往下走，把包裹送到亮灯的门口，用软枕头砸晕调皮的门童机器人，最后跳上快递车。5 家酒店，每家 12 层。 | [play](https://adong.github.io/elevator-dash-tt/) | [adong/elevator-dash-tt](https://github.com/adong/elevator-dash-tt) |
 
 ### ⚽ Sports / 体育运动 (26)
 
